@@ -1,0 +1,13 @@
+import { Component, Input, OnInit } from '@angular/core';
+import { color } from '../../../constants/color';
+
+@Component({
+  selector: 'app-button',
+  templateUrl: './button.component.html',
+  styleUrls: ['./button.component.scss'],
+})
+export class ButtonComponent {
+  @Input() color?: string = color.primary;
+  @Input() label?: string = '';
+  constructor() {}
+}

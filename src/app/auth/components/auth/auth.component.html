@@ -1,0 +1,14 @@
+<nav mat-tab-nav-bar>
+  <a
+    mat-tab-link
+    *ngFor="let link of links"
+    (click)="setActive(link)"
+    [active]="active === link"
+    routerLink="{{ link }}"
+  >
+    {{ link | uppercase }}
+  </a>
+</nav>
+<div class="auth-forms">
+  <router-outlet></router-outlet>
+</div>

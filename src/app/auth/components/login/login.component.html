@@ -1,2 +1,24 @@
-<p>login works!</p>
-<app-field></app-field>
+<div class="login">
+  <div class="login-card">
+    <mat-card>
+      <form [formGroup]="loginForm">
+        <app-field
+          label="Email"
+          formControlName="email"
+          [parentForm]="loginForm"
+        ></app-field>
+
+        <app-field
+          label="Password"
+          formControlName="password"
+          [parentForm]="loginForm"
+          [isHidden]="true"
+        ></app-field>
+
+        <div class="actions">
+          <app-button label="Login"></app-button>
+        </div>
+      </form>
+    </mat-card>
+  </div>
+</div>

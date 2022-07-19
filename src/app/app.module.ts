@@ -4,8 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { ToolbarModule } from './shared/modules/toolbar/toolbar.module';
-
+import { ToolbarModule } from './shared/components/toolbar/toolbar.module';
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -14,7 +13,6 @@ import { ToolbarModule } from './shared/modules/toolbar/toolbar.module';
     AppRoutingModule,
     BrowserAnimationsModule,
   ],
-  providers: [],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

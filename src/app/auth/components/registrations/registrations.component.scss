@@ -1,0 +1,13 @@
+.registrations {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  &-card {
+    max-width: 500px;
+  }
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+}

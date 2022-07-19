@@ -1,15 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-registrations',
   templateUrl: './registrations.component.html',
-  styleUrls: ['./registrations.component.scss']
+  styleUrls: ['./registrations.component.scss'],
 })
-export class RegistrationsComponent implements OnInit {
+export class RegistrationsComponent {
+  constructor(private formBuilder: FormBuilder) {}
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+  loginForm: FormGroup = this.formBuilder.group({
+    password: ['', Validators.minLength(4)],
+    email: ['', Validators.email],
+    name: [''],
+  });
 }
