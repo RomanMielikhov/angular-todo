@@ -1,7 +1,7 @@
 <div class="login">
   <div class="login-card">
     <mat-card>
-      <form [formGroup]="loginForm">
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <app-field
           label="Email"
           formControlName="email"
@@ -16,7 +16,15 @@
         ></app-field>
 
         <div class="actions">
-          <app-button label="Login"></app-button>
+          <app-button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            label="Login"
+            [isLoading]="isSubmitting"
+            [isDisabled]="isSubmitting || !loginForm.valid"
+          >
+          </app-button>
         </div>
       </form>
     </mat-card>

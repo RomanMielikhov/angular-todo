@@ -1,28 +1,36 @@
 <div class="registrations">
   <div class="registrations-card">
     <mat-card>
-      <form [formGroup]="loginForm">
+      <form [formGroup]="registrationsForm" (ngSubmit)="onSubmit()">
         <app-field
           label="Name"
           formControlName="name"
-          [parentForm]="loginForm"
+          [parentForm]="registrationsForm"
         ></app-field>
 
         <app-field
           label="Email"
           formControlName="email"
-          [parentForm]="loginForm"
+          [parentForm]="registrationsForm"
         ></app-field>
 
         <app-field
+          [isHidden]="true"
           label="Password"
           formControlName="password"
-          [parentForm]="loginForm"
-          [isHidden]="true"
+          [parentForm]="registrationsForm"
         ></app-field>
 
         <div class="actions">
-          <app-button label="Login"></app-button>
+          <app-button
+            mat-raised-button
+            type="submit"
+            color="primary"
+            label="Registrations"
+            [isLoading]="isSubmitting"
+            [isDisabled]="isSubmitting || !registrationsForm.valid"
+          >
+          </app-button>
         </div>
       </form>
     </mat-card>

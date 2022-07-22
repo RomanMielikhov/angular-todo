@@ -10,7 +10,6 @@
     [formControl]="formControl"
     placeholder="{{ placeholder }}"
   />
-  <!-- <mat-icon matSuffix>sentiment_very_satisfied</mat-icon> -->
 
   <button
     matSuffix
@@ -18,11 +17,14 @@
     mat-icon-button
     [attr.aria-pressed]="isHide"
     (click)="setHideInputValue()"
-    [attr.aria-label]="'Hide password'"
+    attr.aria-label="Hide password"
   >
     <mat-icon>{{ isHide ? "visibility_off" : "visibility" }}</mat-icon>
   </button>
 
   <mat-hint>{{ hint }}</mat-hint>
-  <mat-error *ngIf="formControl.invalid">{{ getErrorMessage() }}</mat-error>
+
+  <mat-error>
+    <app-field-error [label]="label" [control]="formControl"></app-field-error
+  ></mat-error>
 </mat-form-field>

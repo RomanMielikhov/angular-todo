@@ -3,3 +3,7 @@ export const enum authPath {
   login = 'login',
   registrations = 'registrations',
 }
+
+export const enum dashboardPath {
+  dashboard = 'dashboard',
+}

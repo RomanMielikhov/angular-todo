@@ -20,7 +20,7 @@ import {
 })
 export class FieldComponent implements ControlValueAccessor {
   @Input() hint?: string;
-  @Input() label?: string;
+  @Input() label: string = '';
   @Input() placeholder?: string;
   @Input() parentForm?: FormGroup;
   @Input() formControlName!: string;
@@ -40,6 +40,7 @@ export class FieldComponent implements ControlValueAccessor {
   get formControl(): FormControl {
     return this.parentForm?.get(this.formControlName) as FormControl;
   }
+
   get type(): string {
     return this.isHidden && this.isHide ? 'password' : this.fieldType;
   }
@@ -62,11 +63,6 @@ export class FieldComponent implements ControlValueAccessor {
 
   public setDisabledState(isDisabled: boolean): void {
     this.isDisabled = isDisabled;
-  }
-
-  public getErrorMessage(): string {
-    console.log(this.formControl);
-    return 'ERROR';
   }
 
   public setHideInputValue(): void {
