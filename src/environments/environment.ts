@@ -10,8 +10,10 @@ export const environment = {
     apiKey: 'AIzaSyDVpU1I1z62RHXfpQwBkJHMfiaeCH9QyzI',
     authDomain: 'angular-todo-6964d.firebaseapp.com',
     messagingSenderId: '246224926761',
+    databaseURL:
+      'https://angular-todo-6964d-default-rtdb.europe-west1.firebasedatabase.app',
   },
-  production: false
+  production: false,
 };
 
 /*

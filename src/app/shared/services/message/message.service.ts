@@ -23,6 +23,8 @@ const firebaseMessages: ObjectLiteral = {
   'auth/network-request-failed': 'Network Error',
   'auth/network-request-fasiled': 'Something was wrong',
   'auth/email-already-in-use': 'Email already existing',
+  'auth/user-not-found': 'User not found',
+  'auth/wrong-password': 'Wrong password',
 };
 
 const statusMessages: ObjectStatusLiteral = {

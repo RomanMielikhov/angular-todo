@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { FirebaseError } from '@angular/fire/app';
 import {
   Auth,
+  User,
   signOut,
   UserCredential,
   signInWithPopup,
@@ -9,25 +10,46 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from '@angular/fire/auth';
-import { IRegistrations, ILogin } from 'src/app/shared/interfaces/auth';
+import {
+  ILogin,
+  IRegistrations,
+} from 'src/app/shared/interfaces/auth.interface';
 import { MessageService } from 'src/app/shared/services/message/message.service';
 import { SnackbarService } from 'src/app/shared/services/snackbar/snackbar.service';
+import { UserService } from 'src/app/shared/services/user/user.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+  public isAuth: boolean = false;
+  public user: User | null = null;
+
   constructor(
     private auth: Auth,
     private messageService: MessageService,
-    private snackbarService: SnackbarService
-  ) {}
+    private snackbarService: SnackbarService,
+    private userService: UserService
+  ) {
+    this.auth.onAuthStateChanged((user) => {
+      this.user = user;
+      this.isAuth = Boolean(user);
+    });
+  }
 
-  async login({ email, password }: ILogin) {
+  async login({ email, password }: ILogin): Promise<UserCredential | null> {
     try {
       const res = await signInWithEmailAndPassword(this.auth, email, password);
-      console.log(res);
-    } catch (error) {}
+
+      return res;
+    } catch (error) {
+      if (error instanceof FirebaseError) {
+        this.snackbarService.warn(
+          this.messageService.getMessageByFirebaseCode(error.code)
+        );
+      }
+      return null;
+    }
   }
 
   loginWithGoogle() {
@@ -49,6 +71,8 @@ export class AuthService {
       this.snackbarService.success(
         this.messageService.getMessageByStatusCode(200)
       );
+
+      this.userService.create({ ...res.user, displayName: name });
 
       return res;
     } catch (error) {

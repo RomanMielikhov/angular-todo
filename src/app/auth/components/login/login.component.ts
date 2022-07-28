@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-
+import { UserCredential } from '@angular/fire/auth';
 import { AuthService } from 'src/app/auth/services/auth.service';
+import { dashboardPath } from 'src/app/constants/routes';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -10,7 +12,8 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 export class LoginComponent {
   constructor(
     private formBuilder: FormBuilder,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   isSubmitting: boolean = false;
@@ -25,7 +28,14 @@ export class LoginComponent {
 
   async onSubmit() {
     this.isSubmitting = true;
-    await this.authService.login(this.loginForm.value);
+    const data = await this.authService.login(this.loginForm.value);
     this.isSubmitting = false;
+    if (data) {
+      this.router.navigate([dashboardPath.dashboard, data.user.uid]);
+    }
+  }
+
+  logout() {
+    this.authService.logout();
   }
 }

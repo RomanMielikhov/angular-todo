@@ -25,6 +25,8 @@
             [isDisabled]="isSubmitting || !loginForm.valid"
           >
           </app-button>
+
+          <button (click)="logout()" type="button">logout</button>
         </div>
       </form>
     </mat-card>
