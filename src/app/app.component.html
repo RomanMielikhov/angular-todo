@@ -1,6 +1,16 @@
 <div class="content">
   <app-toolbar> </app-toolbar>
-  <div class="body">
-    <router-outlet></router-outlet>
-  </div>
+
+  <mat-sidenav-container class="body">
+    <mat-sidenav
+      #sidenav
+      position="end"
+      style="min-width: 300px; background-color: rebeccapurple"
+      >SOME CONTENT
+    </mat-sidenav>
+    <mat-sidenav-content class="content">
+      <button mat-button (click)="sidenav.toggle()">Toggle</button>
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
 </div>

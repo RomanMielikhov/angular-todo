@@ -9,6 +9,7 @@
     (input)="onChange($event)"
     [formControl]="formControl"
     placeholder="{{ placeholder }}"
+    (keydown.enter)="onEnterPress($event)"
   />
 
   <button
@@ -17,7 +18,7 @@
     mat-icon-button
     [attr.aria-pressed]="isHide"
     (click)="setHideInputValue()"
-    attr.aria-label="Hide password"
+    aria-label="Hide password"
   >
     <mat-icon>{{ isHide ? "visibility_off" : "visibility" }}</mat-icon>
   </button>

@@ -1,29 +1,36 @@
-<div class="example-container">
-  <h2>To do</h2>
+<form [formGroup]="form">
+  <mat-card-title class="header" *ngIf="!editing" (dblclick)="onEditStart()"
+    >{{ form.value.header }}
+  </mat-card-title>
+  <app-field
+    *ngIf="editing"
+    label="Header"
+    formControlName="header"
+    [parentForm]="form"
+    (onInputTokenEnd)="rename($event)"
+  ></app-field>
 
   <div
     cdkDropList
-    #todoList="cdkDropList"
-    [cdkDropListData]="todo"
-    [cdkDropListConnectedTo]="[doneList]"
-    class="example-list"
     (cdkDropListDropped)="drop($event)"
+    [id]="data.id!"
+    [cdkDropListData]="items"
   >
-    <div class="example-box" *ngFor="let item of todo" cdkDrag>{{ item }}</div>
+    <mat-chip-list>
+      <mat-chip
+        *ngFor="let item of items"
+        cdkDrag
+        [cdkDragData]="item"
+        (removed)="delete(item.id!)"
+      >
+        <app-item [item]="item" class="items"></app-item
+      ></mat-chip>
+    </mat-chip-list>
   </div>
-</div>
-
-<div class="example-container">
-  <h2>Done</h2>
-
-  <div
-    cdkDropList
-    #doneList="cdkDropList"
-    [cdkDropListData]="done"
-    [cdkDropListConnectedTo]="[todoList]"
-    class="example-list"
-    (cdkDropListDropped)="drop($event)"
-  >
-    <div class="example-box" *ngFor="let item of done" cdkDrag>{{ item }}</div>
-  </div>
-</div>
+  <app-field
+    label="New todo"
+    formControlName="todoTitle"
+    [parentForm]="form"
+    (onInputTokenEnd)="add($event)"
+  ></app-field>
+</form>

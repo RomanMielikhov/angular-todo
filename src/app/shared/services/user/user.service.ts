@@ -8,18 +8,13 @@ import {
   doc,
 } from '@angular/fire/firestore';
 import { User } from '@angular/fire/auth';
-
 import { IUser } from '../../interfaces/user.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  private userCollection: CollectionReference<DocumentData>;
-
-  constructor(private readonly firestore: Firestore) {
-    this.userCollection = collection(this.firestore, 'users');
-  }
+  constructor(private readonly firestore: Firestore) {}
 
   create(user: User) {
     const current: IUser = {
@@ -27,6 +22,7 @@ export class UserService {
       name: user.displayName!,
       email: user.email!,
       sharedWith: [],
+      positionsOfLists: [],
     };
 
     const userDoc = doc(this.firestore, 'users', user.uid);

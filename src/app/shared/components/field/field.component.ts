@@ -1,4 +1,10 @@
-import { Component, Input, forwardRef } from '@angular/core';
+import {
+  Component,
+  Input,
+  forwardRef,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 import {
   FormGroup,
   FormControl,
@@ -25,6 +31,7 @@ export class FieldComponent implements ControlValueAccessor {
   @Input() parentForm?: FormGroup;
   @Input() formControlName!: string;
   @Input() isHidden?: boolean = false;
+  @Output() onInputTokenEnd: EventEmitter<Event> = new EventEmitter();
 
   public value: string = '';
   public isDisabled: boolean = false;
@@ -36,6 +43,10 @@ export class FieldComponent implements ControlValueAccessor {
   public touched: () => void = () => {};
 
   constructor() {}
+
+  public onEnterPress(e: Event): void {
+    this.onInputTokenEnd.emit(e);
+  }
 
   get formControl(): FormControl {
     return this.parentForm?.get(this.formControlName) as FormControl;

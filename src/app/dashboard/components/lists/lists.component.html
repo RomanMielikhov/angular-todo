@@ -1,1 +1,14 @@
-<p>lists works!</p>
+<div class="dashboard" cdkDropListGroup>
+  <div class="content" *ngFor="let todo of lists">
+    <mat-card>
+      <div class="remove-card">
+        <button mat-icon-button (click)="onRemoveList(todo.id!)">
+          <mat-icon>remove</mat-icon>
+        </button>
+      </div>
+      <app-list [listData]="todo" (moveTodo)="updateLists($event)"></app-list>
+    </mat-card>
+  </div>
+
+  <app-fav-button (click)="onAddList()">add</app-fav-button>
+</div>

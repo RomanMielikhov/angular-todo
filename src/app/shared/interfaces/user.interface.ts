@@ -9,5 +9,6 @@ export interface IUser {
   uid?: string;
   email: string;
   name: string;
-  sharedWith: Array<IPermissions>;
+  sharedWith: IPermissions[];
+  positionsOfLists: string[];
 }
