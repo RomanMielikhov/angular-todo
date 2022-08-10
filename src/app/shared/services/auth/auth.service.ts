@@ -2,14 +2,15 @@ import { Injectable } from '@angular/core';
 import { FirebaseError } from '@angular/fire/app';
 import {
   Auth,
-  User,
   signOut,
   UserCredential,
-  signInWithPopup,
-  GoogleAuthProvider,
   signInWithEmailAndPassword,
+  onAuthStateChanged,
   createUserWithEmailAndPassword,
 } from '@angular/fire/auth';
+
+import { Observable } from 'rxjs';
+
 import {
   ILogin,
   IRegistrations,
@@ -17,25 +18,18 @@ import {
 import { MessageService } from 'src/app/shared/services/message/message.service';
 import { SnackbarService } from 'src/app/shared/services/snackbar/snackbar.service';
 import { UserService } from 'src/app/shared/services/user/user.service';
+import { IUser } from '../../interfaces/user.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  public isAuth: boolean = false;
-  public user: User | null = null;
-
   constructor(
     private auth: Auth,
     private messageService: MessageService,
     private snackbarService: SnackbarService,
     private userService: UserService
-  ) {
-    this.auth.onAuthStateChanged((user) => {
-      this.user = user;
-      this.isAuth = Boolean(user);
-    });
-  }
+  ) {}
 
   async login({ email, password }: ILogin): Promise<UserCredential | null> {
     try {
@@ -50,10 +44,6 @@ export class AuthService {
       }
       return null;
     }
-  }
-
-  loginWithGoogle() {
-    return signInWithPopup(this.auth, new GoogleAuthProvider());
   }
 
   async register({

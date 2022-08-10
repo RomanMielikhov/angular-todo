@@ -9,9 +9,7 @@ import { authPath } from '../../../constants/routes';
   styleUrls: ['./auth.component.scss'],
 })
 export class AuthComponent implements OnInit {
-  constructor(private route: ActivatedRoute, private router: Router) {
-    console.log(router, route);
-  }
+  constructor(private router: Router) {}
 
   links: string[] = [authPath.login, authPath.registrations];
   active: string = authPath.login;

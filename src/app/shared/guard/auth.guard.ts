@@ -1,28 +1,30 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import {
   Router,
   CanActivate,
   RouterStateSnapshot,
   ActivatedRouteSnapshot,
 } from '@angular/router';
-// import { AuthService } from "../../shared/services/auth.service";
-import { Observable } from 'rxjs';
+import { Auth, Unsubscribe } from '@angular/fire/auth';
+
 @Injectable({
   providedIn: 'root',
 })
-export class AuthGuard implements CanActivate {
-  constructor(
-    // public authService: AuthService,
-    public router: Router
-  ) {}
-  canActivate(
-    next: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): Observable<boolean> | Promise<boolean> | boolean {
-    // this.authService.isLoggedIn
-    if (true !== true) {
-      this.router.navigate(['sign-in']);
-    }
-    return true;
+export class AuthGuard implements CanActivate, OnDestroy {
+  constructor(public router: Router, private auth: Auth) {}
+  private unsubscribe: Unsubscribe | null = null;
+
+  canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+    return new Promise<boolean>((resolve) => {
+      this.unsubscribe = this.auth.onAuthStateChanged((user) => {
+        if (user) return resolve(true);
+        return resolve(false);
+      });
+    });
+  }
+
+  ngOnDestroy(): void {
+    // is it legal?
+    if (this.unsubscribe) this.unsubscribe();
   }
 }

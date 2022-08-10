@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { UserCredential } from '@angular/fire/auth';
-import { AuthService } from 'src/app/auth/services/auth.service';
+import { AuthService } from 'src/app/shared/services/auth/auth.service';
 import { dashboardPath } from 'src/app/constants/routes';
 @Component({
   selector: 'app-login',

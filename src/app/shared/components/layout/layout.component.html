@@ -1,0 +1,7 @@
+<div class="container">
+  <app-toolbar (onUserClick)="aside.toggleAside()"> </app-toolbar>
+
+  <app-aside #aside class="content">
+    <ng-content></ng-content>
+  </app-aside>
+</div>

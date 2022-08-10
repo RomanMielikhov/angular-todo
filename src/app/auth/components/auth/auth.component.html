@@ -4,7 +4,7 @@
     *ngFor="let link of links"
     (click)="setActive(link)"
     [active]="active === link"
-    routerLink="{{ link }}"
+    [routerLink]="link"
   >
     {{ link | uppercase }}
   </a>

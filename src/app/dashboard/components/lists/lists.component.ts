@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { IToDoList } from 'src/app/shared/interfaces/todo.interface';
 import { TodoService } from 'src/app/shared/services/todo/todo.service';
+import { UserService } from 'src/app/shared/services/user/user.service';
 
 @Component({
   selector: 'app-lists',
@@ -10,7 +11,11 @@ import { TodoService } from 'src/app/shared/services/todo/todo.service';
   styleUrls: ['./lists.component.scss'],
 })
 export class ListsComponent implements OnInit {
-  constructor(public todoService: TodoService, private route: ActivatedRoute) {}
+  constructor(
+    public todoService: TodoService,
+    private route: ActivatedRoute,
+    private userService: UserService
+  ) {}
 
   lists: IToDoList[] = [];
 
@@ -19,6 +24,8 @@ export class ListsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.userService.getUserInfo(this.userId);
+
     this.todoService
       .getLists(this.userId)
       .subscribe((data) => (this.lists = data));
