@@ -22,7 +22,7 @@
       "@shared/*": ["src/app/shared/"],
       "@sharedComponents/*": ["src/app/shared/components"]
     },
-    "lib": ["es2020", "dom"]
+    "lib": ["es2022", "dom"]
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

@@ -1,10 +1,9 @@
 <mat-toolbar color="primary">
   <span>Todo List</span>
   <span class="spacer"></span>
-  <span class=""
-    >Hi,
+  <span *ngIf="this.userService.user | async">
     <button mat-button (click)="onClick()">
-      {{ (this.userService.user | async)?.name }}
+      Hi, {{ (this.userService.user | async)?.name }}
     </button>
   </span>
 </mat-toolbar>

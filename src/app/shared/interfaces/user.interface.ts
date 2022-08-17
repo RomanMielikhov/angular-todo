@@ -11,4 +11,5 @@ export interface IUser {
   name: string;
   sharedWith: IPermissions[];
   positionsOfLists: string[];
+  searchParameters: string[];
 }

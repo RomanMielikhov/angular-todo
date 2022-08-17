@@ -1,0 +1,66 @@
+<form [formGroup]="shareForm" (ngSubmit)="onSubmit()">
+  <mat-form-field class="example-full-width" appearance="fill">
+    <mat-label>Number</mat-label>
+    <input
+      type="text"
+      placeholder="Pick one"
+      aria-label="Number"
+      matInput
+      formControlName="name"
+      [matAutocomplete]="auto"
+    />
+    <mat-autocomplete
+      autoActiveFirstOption
+      #auto="matAutocomplete"
+      [displayWith]="displayFn"
+    >
+      <mat-option *ngFor="let user of users$ | async" [value]="user">
+        {{ user.name }} ({{ user.email }})
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+
+  <!-- <app-field
+    label="Name"
+    formControlName="name"
+    [parentForm]="shareForm"
+  ></app-field> -->
+  <mat-slide-toggle formControlName="read">Read</mat-slide-toggle>
+  <mat-slide-toggle formControlName="write">Write</mat-slide-toggle>
+  <mat-slide-toggle formControlName="share">Share</mat-slide-toggle>
+  <app-button
+    mat-raised-button
+    color="primary"
+    type="submit"
+    label="Add"
+    [isLoading]="isSubmitting"
+    [isDisabled]="isSubmitting || !shareForm.valid"
+  >
+  </app-button>
+</form>
+<div class="share-container">
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="read">
+      <th mat-header-cell *matHeaderCellDef>Reade</th>
+      <td mat-cell *matCellDef="let element">{{ element.read }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="write">
+      <th mat-header-cell *matHeaderCellDef>Write</th>
+      <td mat-cell *matCellDef="let element">{{ element.write }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="share">
+      <th mat-header-cell *matHeaderCellDef>Share</th>
+      <td mat-cell *matCellDef="let element">{{ element.share }}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+</div>

@@ -1,7 +1,36 @@
 .container {
   flex: 1 1 auto;
-}
-.side-nav {
-  width: 18rem;
-  background-color: rebeccapurple;
+
+  & .side-nav {
+    width: 18rem;
+    background-color: #fafafa;
+
+    & .menu {
+      margin-top: 5rem;
+      display: flex;
+      flex-direction: column;
+
+      & .item {
+        color: #3f51b5;
+        background-color: white;
+        cursor: pointer;
+        border: none;
+
+        user-select: none;
+
+        line-height: 36px;
+        padding: 0 16px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: row;
+
+        &:hover {
+          background-color: #3f51b5;
+          color: white;
+        }
+      }
+    }
+  }
 }

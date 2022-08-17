@@ -24,7 +24,7 @@ export class ListsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.userService.getUserInfo(this.userId);
+    // this.userService.getUserInfo(this.userId);
 
     this.todoService
       .getLists(this.userId)

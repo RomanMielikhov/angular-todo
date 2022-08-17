@@ -5,11 +5,10 @@ import {
   signOut,
   UserCredential,
   signInWithEmailAndPassword,
-  onAuthStateChanged,
   createUserWithEmailAndPassword,
 } from '@angular/fire/auth';
 
-import { Observable } from 'rxjs';
+import { of, from, Observable } from 'rxjs';
 
 import {
   ILogin,
@@ -18,7 +17,6 @@ import {
 import { MessageService } from 'src/app/shared/services/message/message.service';
 import { SnackbarService } from 'src/app/shared/services/snackbar/snackbar.service';
 import { UserService } from 'src/app/shared/services/user/user.service';
-import { IUser } from '../../interfaces/user.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -29,7 +27,11 @@ export class AuthService {
     private messageService: MessageService,
     private snackbarService: SnackbarService,
     private userService: UserService
-  ) {}
+  ) {
+    this.auth.onAuthStateChanged((user) => {
+      this.userService.getUserInfo(user?.uid);
+    });
+  }
 
   async login({ email, password }: ILogin): Promise<UserCredential | null> {
     try {
@@ -76,7 +78,7 @@ export class AuthService {
     }
   }
 
-  logout() {
-    return signOut(this.auth);
+  public logout(): Observable<void> {
+    return from(signOut(this.auth));
   }
 }

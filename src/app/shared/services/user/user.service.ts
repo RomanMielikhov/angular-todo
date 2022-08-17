@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { DocumentData } from '@angular/fire/compat/firestore';
-import { from, map, Observable } from 'rxjs';
+import { from, map, Observable, of } from 'rxjs';
 import {
   Firestore,
   collection,
@@ -9,6 +9,9 @@ import {
   doc,
   getDoc,
   DocumentReference,
+  getDocs,
+  where,
+  query,
 } from '@angular/fire/firestore';
 import { User } from '@angular/fire/auth';
 import { IUser } from '../../interfaces/user.interface';
@@ -21,7 +24,55 @@ export class UserService {
 
   public user: Observable<IUser | null> = new Observable();
 
-  getUserInfo(id: string) {
+  private getSearchParameters(string: string): string[] {
+    return string.split('').reduce<string[]>((acc, e) => {
+      const next = `${acc.at(-1) || ''}${e}`;
+      return acc.concat(next.toLowerCase());
+    }, []);
+  }
+
+  getByName(name: any): Observable<any> {
+    if (typeof name !== 'string') return of([]);
+
+    const colRef = collection(
+      this.firestore,
+      'users'
+    ) as CollectionReference<IUser>;
+
+    const q = query(
+      colRef,
+      where('searchParameters', 'array-contains', name.toLowerCase())
+    );
+
+    return from(getDocs(q)).pipe(
+      map((res) => {
+        return res.docs.map((doc) => doc.data());
+      })
+    );
+  }
+
+  // getLists(userId: string): Observable<any> {
+  //   const colRef = collection(this.firestore, `users/${userId}/todo-lists`);
+  //   // as CollectionReference<IToDoList>;
+
+  //   const q = query(colRef);
+
+  //   return from(getDocs(q));
+  //   // .pipe(
+  //   //   map((res) => {
+  //   //     return res.docs.map((doc) => {
+  //   //       return { id: doc.id, ...doc.data() };
+  //   //     });
+  //   //   })
+  //   // );
+  // }
+
+  getUserInfo(id?: string): void {
+    if (!id) {
+      this.user = of();
+      return;
+    }
+
     const userDoc = doc(
       this.firestore,
       'users',
@@ -38,6 +89,10 @@ export class UserService {
       email: user.email!,
       sharedWith: [],
       positionsOfLists: [],
+      searchParameters: [
+        ...this.getSearchParameters(user.displayName!),
+        ...this.getSearchParameters(user.email!),
+      ],
     };
 
     const userDoc = doc(this.firestore, 'users', user.uid);

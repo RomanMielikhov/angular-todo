@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
-import { authPath } from '../../../constants/routes';
+import { authPath } from 'src/app/constants/routes';
 
 @Component({
   selector: 'app-auth',

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
 import { dashboardPath } from 'src/app/constants/routes';
 @Component({
@@ -32,9 +33,5 @@ export class LoginComponent {
     if (data) {
       this.router.navigate([dashboardPath.dashboard, data.user.uid]);
     }
-  }
-
-  logout() {
-    this.authService.logout();
   }
 }
