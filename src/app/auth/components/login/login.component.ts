@@ -31,7 +31,11 @@ export class LoginComponent {
     const data = await this.authService.login(this.loginForm.value);
     this.isSubmitting = false;
     if (data) {
-      this.router.navigate([dashboardPath.dashboard, data.user.uid]);
+      this.router.navigate([
+        dashboardPath.dashboard,
+        data.user.uid,
+        dashboardPath.todo,
+      ]);
     }
   }
 }

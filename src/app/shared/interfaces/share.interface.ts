@@ -1,7 +1,7 @@
+import { IUser } from './user.interface';
+
 export interface IShare {
-  uid?: string;
-  email: string;
-  name: string;
+  user?: IUser;
   read: boolean;
   write: boolean;
   share: boolean;

@@ -17,6 +17,7 @@ import {
 import { MessageService } from 'src/app/shared/services/message/message.service';
 import { SnackbarService } from 'src/app/shared/services/snackbar/snackbar.service';
 import { UserService } from 'src/app/shared/services/user/user.service';
+import { ShareService } from '../share/share.service';
 
 @Injectable({
   providedIn: 'root',
@@ -26,6 +27,7 @@ export class AuthService {
     private auth: Auth,
     private messageService: MessageService,
     private snackbarService: SnackbarService,
+    private shareService: ShareService,
     private userService: UserService
   ) {
     this.auth.onAuthStateChanged((user) => {
@@ -65,6 +67,7 @@ export class AuthService {
       );
 
       this.userService.create({ ...res.user, displayName: name });
+      this.shareService.createShareList(res.user.uid);
 
       return res;
     } catch (error) {

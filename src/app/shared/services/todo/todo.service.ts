@@ -8,6 +8,7 @@ import {
   Observable,
   mergeMap,
   Subject,
+  catchError,
 } from 'rxjs';
 import {
   Firestore,
@@ -57,6 +58,10 @@ export class TodoService {
           return { id: doc.id, ...doc.data() };
         });
       })
+      // catchError((e, caught) => {
+      //   console.log('ERROR', e, caught);
+      //   return caught;
+      // })
     );
   }
 

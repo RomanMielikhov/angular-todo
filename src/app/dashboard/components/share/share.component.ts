@@ -13,58 +13,27 @@ import {
 import { UserService } from 'src/app/shared/services/user/user.service';
 import { IUser } from 'src/app/shared/interfaces/user.interface';
 
-const ELEMENT_DATA: IShare[] = [
-  {
-    email: 'alsmdal@asda.com',
-    name: 'Hydrogen',
-    read: true,
-    write: true,
-    share: true,
-  },
-  {
-    email: 'alsmdal@asda.com1',
-    name: 'sdfsdfsd',
-    read: true,
-    write: true,
-    share: true,
-  },
-  {
-    email: 'alsmdal@asda.com2',
-    name: 'sdfsdfs',
-    read: true,
-    write: true,
-    share: true,
-  },
-  {
-    email: 'alsmdal@asda.com3',
-    name: 'we12',
-    read: true,
-    write: true,
-    share: true,
-  },
-  {
-    email: 'alsmdal@asda.com4',
-    name: 'fasfas',
-    read: true,
-    write: true,
-    share: true,
-  },
-];
-
 @Component({
   selector: 'app-share',
   templateUrl: './share.component.html',
   styleUrls: ['./share.component.scss'],
 })
 export class ShareComponent implements OnInit {
-  displayedColumns: string[] = ['name', 'read', 'write', 'share'];
+  displayedColumns: string[] = [
+    'name',
+    'email',
+    'read',
+    'write',
+    'share',
+    'delete',
+  ];
   users$: Observable<IUser[]> = of([]);
   dataSource: IShare[] = [];
 
   isSubmitting: boolean = false;
 
   shareForm: FormGroup = this.formBuilder.group({
-    name: ['', [Validators.required]],
+    user: ['', [Validators.required]],
     read: [false],
     write: [false],
     share: [true],
@@ -76,12 +45,11 @@ export class ShareComponent implements OnInit {
     private readonly userService: UserService,
     private readonly route: ActivatedRoute
   ) {
-    this.users$ = this.shareForm.get('name')!.valueChanges.pipe(
+    this.users$ = this.shareForm.get('user')!.valueChanges.pipe(
       distinctUntilChanged(),
       debounceTime(1000),
       switchMap((name) => this.userService.getByName(name))
     );
-    this.users$.subscribe((v) => console.log(v));
   }
 
   get userId(): string {
@@ -93,26 +61,27 @@ export class ShareComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.shareService.getShareList(this.userId).subscribe(
-      (v) =>
-        (this.dataSource = Object.entries(v).map(([email, data]) => ({
-          ...data,
-          email,
-        })))
-    );
+    this.getShareList();
+  }
+
+  private getShareList(): void {
+    this.shareService
+      .getShareList(this.userId)
+      .subscribe((v) => (this.dataSource = Object.values(v)));
   }
 
   public onSubmit(): void {
-    console.log(this.shareForm.value);
+    this.shareService
+      .addShareUser(this.userId, this.shareForm.value)
+      .subscribe(() => {
+        this.dataSource.push(this.shareForm.value);
+        this.getShareList();
+      });
+  }
 
-    const data: IShare = {
-      ...this.shareForm.value,
-      email: 'asdasdad123@gmail.com',
-      uid: '12312412412412412',
-    };
-
-    this.shareService.addShareUser(this.userId, data).subscribe((v) => {
-      this.dataSource.push(data);
-    });
+  public remove(item: IShare): void {
+    this.shareService
+      .deleteShareUser(this.userId, item)
+      .subscribe(() => this.getShareList());
   }
 }
