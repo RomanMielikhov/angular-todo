@@ -5,9 +5,9 @@ import { dashboardPath } from '../constants/routes';
 
 import { ListsComponent } from './components/lists/lists.component';
 import { ShareComponent } from './components/share/share.component';
+import { SharedWithMeComponent } from './components/shared-with-me/shared-with-me.component';
 
 import { AccessGuard } from '../shared/guards/access/access.guard';
-import { ShareGuard } from '../shared/guards/share/share.guard';
 
 const routes: Routes = [
   {
@@ -18,7 +18,10 @@ const routes: Routes = [
   {
     path: `:id/${dashboardPath.share}`,
     component: ShareComponent,
-    canActivate: [ShareGuard],
+  },
+  {
+    path: `:id/${dashboardPath.sharedWithMe}`,
+    component: SharedWithMeComponent,
   },
 ];
 

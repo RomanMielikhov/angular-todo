@@ -5,6 +5,7 @@ export const enum authPath {
 }
 
 export const enum dashboardPath {
+  sharedWithMe = 'sharedWithMe',
   dashboard = 'dashboard',
   share = 'share',
   todo = 'todo',

@@ -1,7 +1,11 @@
 <mat-sidenav-container class="container">
   <mat-sidenav class="side-nav" position="end" [opened]="isOpened">
     <div cdkMenu class="menu">
+      <button class="item" (click)="onToDo()" cdkMenuItem>ToDo</button>
       <button class="item" (click)="onShare()" cdkMenuItem>Share</button>
+      <button class="item" (click)="onSharedWithMe()" cdkMenuItem>
+        Shared With Me
+      </button>
       <button class="item" (click)="onLogout()" cdkMenuItem>Logout</button>
     </div>
   </mat-sidenav>

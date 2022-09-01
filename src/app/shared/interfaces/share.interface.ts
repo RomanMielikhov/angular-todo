@@ -1,8 +1,7 @@
-import { IUser } from './user.interface';
+import { IMainUserInfo } from './user.interface';
 
 export interface IShare {
-  user?: IUser;
+  user?: IMainUserInfo;
   read: boolean;
   write: boolean;
-  share: boolean;
 }

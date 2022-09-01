@@ -1,20 +1,25 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import { DocumentData } from '@angular/fire/compat/firestore';
-import { from, map, Observable, of } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { from, map, Observable, of, tap } from 'rxjs';
 import {
-  Firestore,
   collection,
   CollectionReference,
   setDoc,
+  arrayRemove,
   doc,
   getDoc,
   DocumentReference,
   getDocs,
   where,
   query,
+  arrayUnion,
+  FieldValue,
+  deleteField,
+  updateDoc,
+  Firestore,
 } from '@angular/fire/firestore';
 import { User } from '@angular/fire/auth';
-import { IUser } from '../../interfaces/user.interface';
+import { IMainUserInfo, IUser } from '../../interfaces/user.interface';
+import { IShare } from '../../interfaces/share.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -31,7 +36,7 @@ export class UserService {
     }, []);
   }
 
-  getByName(name: any): Observable<any> {
+  public getByName(name: any): Observable<IUser[]> {
     if (typeof name !== 'string') return of([]);
 
     const colRef = collection(
@@ -67,7 +72,7 @@ export class UserService {
   //   // );
   // }
 
-  getUserInfo(id?: string): void {
+  public getUserInfo(id?: string): void {
     if (!id) {
       this.user = of();
       return;
@@ -82,13 +87,12 @@ export class UserService {
     this.user = from(getDoc(userDoc)).pipe(map((doc) => doc.data()!));
   }
 
-  create(user: User) {
+  public create(user: User) {
     const current: IUser = {
       uid: user.uid,
       name: user.displayName!,
       email: user.email!,
-      sharedWith: [],
-      positionsOfLists: [],
+      sharedWithMe: [],
       searchParameters: [
         ...this.getSearchParameters(user.displayName!),
         ...this.getSearchParameters(user.email!),
@@ -98,5 +102,26 @@ export class UserService {
     const userDoc = doc(this.firestore, 'users', user.uid);
 
     return setDoc(userDoc, current);
+  }
+
+  public addShareWithMe(item: IShare, uid: string): Observable<void> {
+    const { user, ...res } = item;
+    const userDoc = doc(this.firestore, 'users', user!.uid!);
+
+    return from(
+      updateDoc(userDoc, {
+        [`sharedWithMe.${uid}`]: { ...res, user: { ...user, uid } },
+      })
+    ).pipe(tap(() => this.getUserInfo(uid)));
+  }
+
+  public deleteShareWithMe(item: IShare, uid: string): Observable<void> {
+    const userDoc = doc(this.firestore, 'users', item.user!.uid!);
+
+    return from(
+      updateDoc(userDoc, {
+        [`sharedWithMe.${item.user!.uid!}`]: deleteField(),
+      })
+    ).pipe(tap(() => this.getUserInfo(uid)));
   }
 }

@@ -1,6 +1,16 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { DocumentData } from '@angular/fire/compat/firestore';
-import { from, map, Observable, of, filter, take, catchError } from 'rxjs';
+import {
+  from,
+  map,
+  Observable,
+  of,
+  filter,
+  take,
+  catchError,
+  zip,
+  switchMap,
+} from 'rxjs';
 import {
   Firestore,
   collection,
@@ -16,13 +26,17 @@ import {
 } from '@angular/fire/firestore';
 import { User } from '@angular/fire/auth';
 import { IShare } from '../../interfaces/share.interface';
-import { IUser } from '../../interfaces/user.interface';
+import { IMainUserInfo } from '../../interfaces/user.interface';
+import { UserService } from '../user/user.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ShareService {
-  constructor(private readonly firestore: Firestore) {}
+  constructor(
+    private readonly firestore: Firestore,
+    private readonly userService: UserService
+  ) {}
 
   list: { [id: string]: IShare } = {};
 
@@ -34,10 +48,6 @@ export class ShareService {
     return from(getDoc(shareDocRef)).pipe(
       filter((res) => res.exists()),
       map((res) => res.data()!)
-      // catchError((e, caught) => {
-      //   console.log('ERROR', e, caught);
-      //   return caught;
-      // })
     );
   }
 
@@ -53,19 +63,21 @@ export class ShareService {
       'share',
       userID
     ) as DocumentReference<{
-      [email: string]: IShare;
+      [uid: string]: IShare;
     }>;
 
-    return from(updateDoc(shareDocRef, { [data.user!.uid!]: data })).pipe(
-      map(() => data)
-    );
+    return zip([
+      updateDoc(shareDocRef, { [data.user!.uid!]: data }),
+      this.userService.addShareWithMe(data, userID),
+    ]).pipe(map(() => data));
   }
 
-  deleteShareUser(id: string, el: IShare): Observable<void> {
-    const shareDocRef = doc(this.firestore, 'share', id);
+  deleteShareUser(userID: string, data: IShare): Observable<IShare> {
+    const shareDocRef = doc(this.firestore, 'share', userID);
 
-    return from(updateDoc(shareDocRef, { [el.user!.uid!]: deleteField() }));
+    return zip([
+      updateDoc(shareDocRef, { [data.user!.uid!]: deleteField() }),
+      this.userService.deleteShareWithMe(data, userID),
+    ]).pipe(map(() => data));
   }
-
-  editShareUser() {}
 }

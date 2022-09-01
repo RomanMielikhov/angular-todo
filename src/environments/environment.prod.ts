@@ -1,13 +1,11 @@
 export const environment = {
   firebase: {
-    projectId: 'angular-todo-6964d',
-    appId: '1:246224926761:web:2b2a30e4341a44e60a0438',
-    storageBucket: 'angular-todo-6964d.appspot.com',
-    apiKey: 'AIzaSyDVpU1I1z62RHXfpQwBkJHMfiaeCH9QyzI',
-    authDomain: 'angular-todo-6964d.firebaseapp.com',
-    messagingSenderId: '246224926761',
-    databaseURL:
-      'https://angular-todo-6964d-default-rtdb.europe-west1.firebasedatabase.app',
+    apiKey: 'AIzaSyCs2KIuSpEDluBqlFtTDOhbhhjASLm2BlI',
+    authDomain: 'angular-todo-4bce0.firebaseapp.com',
+    projectId: 'angular-todo-4bce0',
+    storageBucket: 'angular-todo-4bce0.appspot.com',
+    messagingSenderId: '579744213330',
+    appId: '1:579744213330:web:157f68554b2bcbfda7b28b',
   },
   production: true,
 };

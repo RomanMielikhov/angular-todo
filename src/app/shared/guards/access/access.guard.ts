@@ -7,7 +7,7 @@ import {
   RouterStateSnapshot,
   UrlTree,
 } from '@angular/router';
-import { from, map, Observable, tap, zip } from 'rxjs';
+import { map, Observable, tap, zip } from 'rxjs';
 import { ShareService } from '../../services/share/share.service';
 import { UserService } from '../../services/user/user.service';
 
@@ -30,7 +30,6 @@ export class AccessGuard implements CanActivate {
     | boolean
     | UrlTree {
     const id = route.params['id'];
-    console.log('ID', id);
 
     return zip([
       this.userService.user,

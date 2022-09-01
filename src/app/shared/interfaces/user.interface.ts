@@ -1,15 +1,10 @@
-export interface IPermissions {
-  uid: string;
-  read: boolean;
-  write: boolean;
-  edit: boolean;
-}
-
-export interface IUser {
+export interface IMainUserInfo {
   uid?: string;
   email: string;
   name: string;
-  sharedWith: IPermissions[];
-  positionsOfLists: string[];
+}
+
+export interface IUser extends IMainUserInfo {
+  sharedWithMe: { [uid: string]: IMainUserInfo }[];
   searchParameters: string[];
 }

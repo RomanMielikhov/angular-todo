@@ -4,6 +4,7 @@ import { filter, map } from 'rxjs';
 
 import { dashboardPath, authPath } from 'src/app/constants/routes';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
+import { UserService } from '../../services/user/user.service';
 
 @Component({
   selector: 'app-aside',
@@ -14,7 +15,11 @@ export class AsideComponent {
   isOpened: boolean = false;
   routeParams: Params = {};
 
-  constructor(private router: Router, private authService: AuthService) {
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private userService: UserService
+  ) {
     this.router.events
       .pipe(
         filter(
@@ -34,17 +39,42 @@ export class AsideComponent {
   }
 
   onShare() {
-    const id: string | null = this.routeParams?.['id'];
-    if (id) {
+    this.userService.user.subscribe((user) => {
       this.toggleAside();
-      this.router.navigate([dashboardPath.dashboard, id, dashboardPath.share]);
-    }
+      this.router.navigate([
+        dashboardPath.dashboard,
+        user!.uid,
+        dashboardPath.share,
+      ]);
+    });
   }
 
   onLogout() {
     this.authService.logout().subscribe(() => {
       this.toggleAside();
       this.router.navigate([authPath.auth, authPath.login]);
+    });
+  }
+
+  onToDo() {
+    this.userService.user.subscribe((user) => {
+      this.toggleAside();
+      this.router.navigate([
+        dashboardPath.dashboard,
+        user!.uid,
+        dashboardPath.todo,
+      ]);
+    });
+  }
+
+  onSharedWithMe() {
+    this.userService.user.subscribe((user) => {
+      this.toggleAside();
+      this.router.navigate([
+        dashboardPath.dashboard,
+        user!.uid,
+        dashboardPath.sharedWithMe,
+      ]);
     });
   }
 }

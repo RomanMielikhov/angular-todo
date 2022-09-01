@@ -1,16 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { ShareService } from 'src/app/shared/services/share/share.service';
-import { IShare } from 'src/app/shared/interfaces/share.interface';
 import {
-  debounceTime,
-  distinctUntilChanged,
-  Observable,
   of,
   switchMap,
+  Observable,
+  debounceTime,
+  distinctUntilChanged,
 } from 'rxjs';
+
+import { ShareService } from 'src/app/shared/services/share/share.service';
 import { UserService } from 'src/app/shared/services/user/user.service';
+
+import { IShare } from 'src/app/shared/interfaces/share.interface';
 import { IUser } from 'src/app/shared/interfaces/user.interface';
 
 @Component({
@@ -19,14 +21,7 @@ import { IUser } from 'src/app/shared/interfaces/user.interface';
   styleUrls: ['./share.component.scss'],
 })
 export class ShareComponent implements OnInit {
-  displayedColumns: string[] = [
-    'name',
-    'email',
-    'read',
-    'write',
-    'share',
-    'delete',
-  ];
+  displayedColumns: string[] = ['name', 'email', 'read', 'write', 'delete'];
   users$: Observable<IUser[]> = of([]);
   dataSource: IShare[] = [];
 
@@ -36,7 +31,6 @@ export class ShareComponent implements OnInit {
     user: ['', [Validators.required]],
     read: [false],
     write: [false],
-    share: [true],
   });
 
   constructor(
@@ -56,12 +50,12 @@ export class ShareComponent implements OnInit {
     return this.route.snapshot.params['id'];
   }
 
-  displayFn(data: any) {
-    return typeof data === 'object' ? `${data.name}(${data.email})` : data;
-  }
-
   ngOnInit(): void {
     this.getShareList();
+  }
+
+  public displayFn(data: any): string {
+    return typeof data === 'object' ? `${data.name}(${data.email})` : data;
   }
 
   private getShareList(): void {
@@ -71,12 +65,14 @@ export class ShareComponent implements OnInit {
   }
 
   public onSubmit(): void {
+    console.log(this.shareForm.value);
+    const { user, ...res } = this.shareForm.value;
     this.shareService
-      .addShareUser(this.userId, this.shareForm.value)
-      .subscribe(() => {
-        this.dataSource.push(this.shareForm.value);
-        this.getShareList();
-      });
+      .addShareUser(this.userId, {
+        ...res,
+        user: { name: user.name, email: user.email, uid: user.uid },
+      })
+      .subscribe(() => this.getShareList());
   }
 
   public remove(item: IShare): void {
