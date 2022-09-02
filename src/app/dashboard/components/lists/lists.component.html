@@ -1,5 +1,5 @@
 <div class="dashboard" cdkDropListGroup>
-  <div class="content" *ngFor="let todo of lists">
+  <div *ngFor="let todo of lists | orderBy: 'asc':'position'">
     <mat-card>
       <div class="remove-card">
         <button mat-icon-button (click)="onRemoveList(todo.id!)">
@@ -9,6 +9,9 @@
       <app-list [listData]="todo" (moveTodo)="updateLists($event)"></app-list>
     </mat-card>
   </div>
-
-  <app-fav-button (click)="onAddList()">add</app-fav-button>
+  <div>
+    <mat-card>
+      <app-fav-button (click)="onAddList()">add</app-fav-button>
+    </mat-card>
+  </div>
 </div>

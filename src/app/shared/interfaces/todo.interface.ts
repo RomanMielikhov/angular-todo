@@ -8,6 +8,7 @@ export interface IToDoItem {
 export interface IToDoList {
   id?: string;
   title: string;
+  position: number;
   createdAt: number;
   updatedAt: number;
 }

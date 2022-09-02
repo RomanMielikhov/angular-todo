@@ -1,4 +1,5 @@
 .dashboard {
+  margin: 1rem;
   display: grid;
   grid-template-rows: auto;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -6,13 +7,10 @@
   grid-auto-rows: 1fr;
   grid-row-gap: 30px;
 
-  & .list-container {
-    min-height: 5rem;
-    &:nth-last-child(1) {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+  & :last-child mat-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 

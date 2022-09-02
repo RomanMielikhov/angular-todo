@@ -26,7 +26,7 @@ export class ListsComponent {
 
   public onAddList(): void {
     this.todoService
-      .addList(this.userId)
+      .addList(this.userId, this.lists.length)
       .subscribe((item) => this.lists.push(item));
   }
 

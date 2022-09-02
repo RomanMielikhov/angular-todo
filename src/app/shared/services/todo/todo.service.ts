@@ -93,7 +93,7 @@ export class TodoService {
     return from(deleteDoc(listDoc)).pipe(map(() => itemId));
   }
 
-  addList(userId: string): Observable<IToDoList> {
+  addList(userId: string, positions: number): Observable<IToDoList> {
     const colRef = collection(
       this.firestore,
       `users/${userId}/todo-lists`
@@ -103,6 +103,7 @@ export class TodoService {
       title: 'New List',
       createdAt: Date.now(),
       updatedAt: Date.now(),
+      position: positions,
     };
 
     return from(addDoc(colRef, data)).pipe(

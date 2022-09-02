@@ -22,9 +22,12 @@ import { ListComponent } from './components/list/list.component';
 import { ShareComponent } from './components/share/share.component';
 import { ListsComponent } from './components/lists/lists.component';
 import { SharedWithMeComponent } from './components/shared-with-me/shared-with-me.component';
+import { OrderByPipe } from '../shared/pipes/orderBy/order-by.pipe';
 
 @NgModule({
+  providers: [OrderByPipe],
   declarations: [
+    OrderByPipe,
     ListComponent,
     ItemComponent,
     ListsComponent,
