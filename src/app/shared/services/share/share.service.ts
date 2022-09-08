@@ -1,32 +1,17 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import { DocumentData } from '@angular/fire/compat/firestore';
+import { Injectable } from '@angular/core';
+import { from, map, Observable, filter, zip } from 'rxjs';
 import {
-  from,
-  map,
-  Observable,
-  of,
-  filter,
-  take,
-  catchError,
-  zip,
-  switchMap,
-} from 'rxjs';
-import {
-  Firestore,
-  collection,
-  CollectionReference,
-  setDoc,
   doc,
-  getDocs,
-  updateDoc,
-  query,
-  deleteField,
+  setDoc,
   getDoc,
+  Firestore,
+  updateDoc,
+  deleteField,
   DocumentReference,
 } from '@angular/fire/firestore';
-import { User } from '@angular/fire/auth';
+
 import { IShare } from '../../interfaces/share.interface';
-import { IMainUserInfo } from '../../interfaces/user.interface';
+
 import { UserService } from '../user/user.service';
 
 @Injectable({

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {
   CdkDragDrop,
   moveItemInArray,
@@ -25,34 +25,38 @@ export class ListComponent implements OnInit {
   @Input('listData') data!: IToDoList;
 
   public items: IToDoItem[] = [];
-
-  @Output() moveTodo: EventEmitter<string[]> = new EventEmitter();
-
-  public form: FormGroup = new FormGroup({});
   public editing: boolean = false;
+  public form: FormGroup = this.formBuilder.group({
+    header: ['', [Validators.required]],
+    todoTitle: ['', [Validators.required]],
+  });
 
   get userId(): string {
     return this.route.snapshot.params['id'];
   }
 
   ngOnInit(): void {
+    this.getItems();
+    this.form.patchValue({ header: this.data.title });
+  }
+
+  private getItems(): void {
     this.todoService
       .getListItems(this.userId, this.data.id!)
       .subscribe((items) => {
-        this.items = items;
-      });
+        const orders = this.data.orderOfItems;
 
-    this.form = this.formBuilder.group({
-      header: [this.data.title, [Validators.required]],
-      todoTitle: ['', [Validators.required]],
-    });
+        this.items = items.sort(
+          (a, b) => orders.indexOf(a.id!) - orders.indexOf(b.id!)
+        );
+      });
   }
 
-  onEditStart(): void {
+  public onEditStart(): void {
     this.editing = true;
   }
 
-  rename(event: Event): void {
+  public rename(event: Event): void {
     this.editing = false;
     this.todoService
       .updateList(this.data.id!, this.userId, {
@@ -65,7 +69,7 @@ export class ListComponent implements OnInit {
       );
   }
 
-  delete(id: string): void {
+  public delete(id: string): void {
     this.todoService
       .deleteListItem(this.data.id!, this.userId, id)
       .subscribe(
@@ -73,7 +77,7 @@ export class ListComponent implements OnInit {
       );
   }
 
-  add(event: Event): void {
+  public add(event: Event): void {
     this.todoService
       .addListItem(this.data.id!, this.userId, this.form.value.todoTitle)
       .subscribe((item: IToDoItem) => {
@@ -82,26 +86,39 @@ export class ListComponent implements OnInit {
       });
   }
 
-  drop(event: CdkDragDrop<IToDoItem[]>) {
+  public drop(event: CdkDragDrop<IToDoItem[]>): void {
     if (event.previousContainer === event.container) {
       moveItemInArray(
         event.container.data,
         event.previousIndex,
         event.currentIndex
       );
-    } else {
-      this.todoService.moveItem(
-        event.previousContainer.id,
+      this.todoService.updatePosition(
         event.container.id,
         this.userId,
-        event.item.data
+        event.container.data.map((e) => e.id!)
       );
+    } else {
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
         event.currentIndex
       );
+
+      this.todoService
+        .moveItem(
+          event.previousContainer.id,
+          event.container.id,
+          this.userId,
+          event.item.data,
+          event.container.data.map((e) => e.id!)
+        )
+        .subscribe((id) => {
+          this.items = this.items.map((el) =>
+            el.id === event.item.data.id ? { ...el, id } : el
+          );
+        });
     }
   }
 }

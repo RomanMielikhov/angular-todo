@@ -1,9 +1,14 @@
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FirebaseError } from '@angular/fire/app';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { from } from 'rxjs';
 
+import { dashboardPath } from 'src/app/constants/routes';
+
+import { SnackbarService } from 'src/app/shared/services/snackbar/snackbar.service';
+import { MessageService } from 'src/app/shared/services/message/message.service';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
-import { authPath } from 'src/app/constants/routes';
 
 @Component({
   selector: 'app-registrations',
@@ -12,6 +17,8 @@ import { authPath } from 'src/app/constants/routes';
 })
 export class RegistrationsComponent {
   constructor(
+    private snackbarService: SnackbarService,
+    private messageService: MessageService,
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private router: Router
@@ -27,11 +34,24 @@ export class RegistrationsComponent {
 
   async onSubmit() {
     this.isSubmitting = true;
-    const res = await this.authService.register(this.registrationsForm.value);
-    this.isSubmitting = false;
 
-    if (res) {
-      this.router.navigate([authPath.auth, authPath.login]);
-    }
+    from(this.authService.register(this.registrationsForm.value)).subscribe(
+      (data) => {
+        this.isSubmitting = false;
+
+        this.router.navigate([
+          dashboardPath.dashboard,
+          data.user.uid,
+          dashboardPath.todo,
+        ]);
+      },
+      (error) => {
+        if (error instanceof FirebaseError) {
+          this.snackbarService.warn(
+            this.messageService.getMessageByFirebaseCode(error.code)
+          );
+        }
+      }
+    );
   }
 }

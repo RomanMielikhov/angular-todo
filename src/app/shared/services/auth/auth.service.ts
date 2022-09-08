@@ -8,7 +8,7 @@ import {
   createUserWithEmailAndPassword,
 } from '@angular/fire/auth';
 
-import { of, from, Observable } from 'rxjs';
+import { of, from, Observable, tap, catchError } from 'rxjs';
 
 import {
   ILogin,
@@ -35,50 +35,33 @@ export class AuthService {
     });
   }
 
-  async login({ email, password }: ILogin): Promise<UserCredential | null> {
-    try {
-      const res = await signInWithEmailAndPassword(this.auth, email, password);
-
-      return res;
-    } catch (error) {
-      if (error instanceof FirebaseError) {
-        this.snackbarService.warn(
-          this.messageService.getMessageByFirebaseCode(error.code)
-        );
-      }
-      return null;
-    }
+  login({ email, password }: ILogin): Observable<UserCredential> {
+    return from(signInWithEmailAndPassword(this.auth, email, password)).pipe(
+      catchError((error) => {
+        throw error;
+      })
+    );
   }
 
-  async register({
+  register({
     name,
     email,
     password,
-  }: IRegistrations): Promise<UserCredential | boolean> {
-    try {
-      const res = await createUserWithEmailAndPassword(
-        this.auth,
-        email,
-        password
-      );
-
-      this.snackbarService.success(
-        this.messageService.getMessageByStatusCode(200)
-      );
-
-      this.userService.create({ ...res.user, displayName: name });
-      this.shareService.createShareList(res.user.uid);
-
-      return res;
-    } catch (error) {
-      if (error instanceof FirebaseError) {
-        this.snackbarService.warn(
-          this.messageService.getMessageByFirebaseCode(error.code)
+  }: IRegistrations): Observable<UserCredential> {
+    return from(
+      createUserWithEmailAndPassword(this.auth, email, password)
+    ).pipe(
+      tap((res) => {
+        this.snackbarService.success(
+          this.messageService.getMessageByStatusCode(200)
         );
-      }
-
-      return false;
-    }
+        this.userService.create({ ...res.user, displayName: name });
+        this.shareService.createShareList(res.user.uid);
+      }),
+      catchError((err) => {
+        throw err;
+      })
+    );
   }
 
   public logout(): Observable<void> {

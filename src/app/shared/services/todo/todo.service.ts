@@ -1,42 +1,22 @@
 import { Injectable } from '@angular/core';
+import { map, from, Observable, zip, switchMap } from 'rxjs';
 import {
-  filter,
-  map,
-  tap,
-  from,
-  reduce,
-  Observable,
-  mergeMap,
-  Subject,
-  catchError,
-} from 'rxjs';
-import {
-  Firestore,
-  collection,
-  CollectionReference,
-  setDoc,
-  addDoc,
-  updateDoc,
   doc,
-  getDocs,
-  writeBatch,
-  deleteDoc,
-  FieldValue,
   query,
-  Query,
-  getDoc,
-  collectionData,
+  addDoc,
+  getDocs,
+  Firestore,
+  updateDoc,
+  deleteDoc,
+  arrayUnion,
+  collection,
   DocumentReference,
-  DocumentSnapshot,
-  onSnapshot,
-  docSnapshots,
-  collectionSnapshots,
-  onSnapshotsInSync,
-  QuerySnapshot,
+  CollectionReference,
 } from '@angular/fire/firestore';
 
 import { IToDoList, IToDoItem } from 'src/app/shared/interfaces/todo.interface';
 import { idToken } from '@angular/fire/auth';
+import { arrayRemove } from '@firebase/firestore';
 
 @Injectable({
   providedIn: 'root',
@@ -44,7 +24,7 @@ import { idToken } from '@angular/fire/auth';
 export class TodoService {
   constructor(private readonly firestore: Firestore) {}
 
-  getLists(userId: string): Observable<IToDoList[]> {
+  public getLists(userId: string): Observable<IToDoList[]> {
     const colRef = collection(
       this.firestore,
       `users/${userId}/todo-lists`
@@ -58,14 +38,10 @@ export class TodoService {
           return { id: doc.id, ...doc.data() };
         });
       })
-      // catchError((e, caught) => {
-      //   console.log('ERROR', e, caught);
-      //   return caught;
-      // })
     );
   }
 
-  getListItems(userId: string, listId: string): Observable<IToDoItem[]> {
+  public getListItems(userId: string, listId: string): Observable<IToDoItem[]> {
     const colRef = collection(
       this.firestore,
       `users/${userId}/todo-lists/${listId}/items`
@@ -78,7 +54,7 @@ export class TodoService {
     );
   }
 
-  deleteListItem(
+  public deleteListItem(
     listId: string,
     userId: string,
     itemId: string
@@ -88,12 +64,25 @@ export class TodoService {
       `users/${userId}/todo-lists/${listId}/items`
     ) as CollectionReference<IToDoList>;
 
+    const todoListRef = collection(
+      this.firestore,
+      `users/${userId}/todo-lists`
+    ) as CollectionReference<IToDoList>;
+
+    const todoDoc = doc(todoListRef, listId);
+
     const listDoc = doc<IToDoList>(colRef, itemId);
 
-    return from(deleteDoc(listDoc)).pipe(map(() => itemId));
+    return from(deleteDoc(listDoc)).pipe(
+      switchMap(() =>
+        from(updateDoc(todoDoc, { orderOfItems: arrayRemove(itemId) })).pipe(
+          map(() => itemId)
+        )
+      )
+    );
   }
 
-  addList(userId: string, positions: number): Observable<IToDoList> {
+  public addList(userId: string, position: number): Observable<IToDoList> {
     const colRef = collection(
       this.firestore,
       `users/${userId}/todo-lists`
@@ -103,7 +92,8 @@ export class TodoService {
       title: 'New List',
       createdAt: Date.now(),
       updatedAt: Date.now(),
-      position: positions,
+      position: position,
+      orderOfItems: [],
     };
 
     return from(addDoc(colRef, data)).pipe(
@@ -111,7 +101,7 @@ export class TodoService {
     );
   }
 
-  removeList(id: string, userId: string): Observable<string> {
+  public removeList(id: string, userId: string): Observable<string> {
     const colRef = collection(
       this.firestore,
       `users/${userId}/todo-lists`
@@ -122,7 +112,7 @@ export class TodoService {
     return from(deleteDoc(listDoc)).pipe(map(() => id));
   }
 
-  addListItem(
+  public addListItem(
     id: string,
     userId: string,
     title: string
@@ -132,18 +122,29 @@ export class TodoService {
       `users/${userId}/todo-lists/${id}/items`
     ) as CollectionReference<IToDoList>;
 
-    const data: IToDoItem = {
+    const todoListRef = collection(
+      this.firestore,
+      `users/${userId}/todo-lists`
+    ) as CollectionReference<IToDoList>;
+
+    const docRef = doc(todoListRef, id);
+
+    const data = {
       title,
       createdAt: Date.now(),
       updatedAt: Date.now(),
-    };
+    } as IToDoItem;
 
     return from(addDoc(colRef, data)).pipe(
-      map((res) => ({ id: res.id, ...data }))
+      switchMap((res) =>
+        from(updateDoc(docRef, { orderOfItems: arrayUnion(res.id) })).pipe(
+          map(() => ({ id: res.id, ...data }))
+        )
+      )
     );
   }
 
-  updateList(
+  public updateList(
     id: string,
     userId: string,
     list: IToDoList
@@ -160,32 +161,69 @@ export class TodoService {
     return from(updateDoc(listDoc, data)).pipe(map(() => ({ ...data, id })));
   }
 
-  moveItem(
+  public updatePosition(
+    listId: string,
+    userId: string,
+    positions: string[]
+  ): Observable<string[]> {
+    const listCol = collection(
+      this.firestore,
+      `users/${userId}/todo-lists`
+    ) as CollectionReference<IToDoList>;
+
+    const listDoc = doc(listCol, listId);
+
+    return from(
+      updateDoc(listDoc, {
+        orderOfItems: positions,
+      })
+    ).pipe(map(() => positions));
+  }
+
+  public moveItem(
     fromListId: string,
     toListId: string,
     userId: string,
-    item: IToDoItem
-  ): Observable<void> {
-    const batch = writeBatch(this.firestore);
-
-    const fromColRef = collection(
+    item: IToDoItem,
+    positions: string[]
+  ): Observable<string> {
+    const fromItemsCol = collection(
       this.firestore,
       `users/${userId}/todo-lists/${fromListId}/items`
     ) as CollectionReference<IToDoList>;
 
-    const fromDocRef = doc(fromColRef, item.id);
+    const { id, ...element } = item;
 
-    batch.delete(fromDocRef);
+    const fromItemDoc = doc(fromItemsCol, id);
 
-    const toColRef = collection(
+    const toItemsCol = collection(
       this.firestore,
       `users/${userId}/todo-lists/${toListId}/items`
     ) as CollectionReference<IToDoList>;
 
-    const toDocRef = doc<IToDoList>(toColRef);
+    const listCol = collection(this.firestore, `users/${userId}/todo-lists`);
 
-    batch.set(toDocRef, item);
+    const fromListDoc = doc(
+      listCol,
+      fromListId
+    ) as DocumentReference<IToDoList>;
 
-    return from(batch.commit());
+    const toListDoc = doc(listCol, toListId) as DocumentReference<IToDoList>;
+
+    return zip([
+      from(addDoc(toItemsCol, element)),
+      from(updateDoc(fromListDoc, { orderOfItems: arrayRemove(id) })),
+      from(deleteDoc(fromItemDoc)),
+    ]).pipe(
+      switchMap(([docRef]) => {
+        return from(
+          updateDoc(toListDoc, {
+            orderOfItems: positions.map((orderId) =>
+              orderId === id ? docRef.id : orderId
+            ),
+          })
+        ).pipe(map(() => docRef.id));
+      })
+    );
   }
 }

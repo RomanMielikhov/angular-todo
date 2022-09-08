@@ -17,7 +17,6 @@ import { FieldModule } from './shared/components/field/field.module';
 import { ButtonModule } from './shared/components/button/button.module';
 import { LayoutModule } from './shared/components/layout/layout.module';
 import { ToolbarModule } from './shared/components/toolbar/toolbar.module';
-import { AppHttpInterceptor } from './shared/interceptors/http.interceptor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -37,13 +36,6 @@ import { AppHttpInterceptor } from './shared/interceptors/http.interceptor';
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideFirestore(() => getFirestore()),
     provideAuth(() => getAuth()),
-  ],
-  providers: [
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AppHttpInterceptor,
-      multi: true,
-    },
   ],
   exports: [],
   bootstrap: [AppComponent],

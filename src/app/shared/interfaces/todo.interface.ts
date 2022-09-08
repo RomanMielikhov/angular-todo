@@ -9,6 +9,7 @@ export interface IToDoList {
   id?: string;
   title: string;
   position: number;
+  orderOfItems: string[];
   createdAt: number;
   updatedAt: number;
 }

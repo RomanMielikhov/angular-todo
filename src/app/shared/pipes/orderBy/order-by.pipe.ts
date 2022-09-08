@@ -12,7 +12,6 @@ export class OrderByPipe implements PipeTransform {
     sortOrder: SortOrder | string = 'asc',
     sortKey?: string
   ): any[] {
-    console.log('transform', list, sortOrder, sortKey);
     let sorted = [];
 
     if (!sortKey) {

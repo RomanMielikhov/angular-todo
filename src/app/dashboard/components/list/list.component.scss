@@ -1,4 +1,8 @@
-.mat-chip {
+.chip-list-wrapper {
+  min-height: 1rem;
+}
+
+mat-chip {
   width: 100%;
   &:nth-last-child(1) {
     display: flex;

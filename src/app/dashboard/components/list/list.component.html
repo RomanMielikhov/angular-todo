@@ -16,16 +16,18 @@
     [id]="data.id!"
     [cdkDropListData]="items"
   >
-    <mat-chip-list>
-      <mat-chip
-        *ngFor="let item of items"
-        cdkDrag
-        [cdkDragData]="item"
-        (removed)="delete(item.id!)"
-      >
-        <app-item [item]="item" class="items"></app-item
-      ></mat-chip>
-    </mat-chip-list>
+    <div class="chip-list-wrapper">
+      <mat-chip-list>
+        <mat-chip
+          *ngFor="let item of items"
+          cdkDrag
+          [cdkDragData]="item"
+          (removed)="delete(item.id!)"
+        >
+          <app-item [item]="item" class="items"></app-item
+        ></mat-chip>
+      </mat-chip-list>
+    </div>
   </div>
   <app-field
     label="New todo"
