@@ -65,7 +65,6 @@ export class ShareComponent implements OnInit {
   }
 
   public onSubmit(): void {
-    console.log(this.shareForm.value);
     const { user, ...res } = this.shareForm.value;
     this.shareService
       .addShareUser(this.userId, {

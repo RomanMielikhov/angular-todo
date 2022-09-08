@@ -35,14 +35,10 @@ export class AccessGuard implements CanActivate {
       this.userService.user,
       this.shareService.getShareList(id),
     ]).pipe(
-      tap(([user, shareList]) => {
-        console.log('TAPuser, shareList', user, shareList);
-      }),
       map(([user, shareList]) => {
-        console.log('user, shareList', user, shareList);
         if (!id || !user) return false;
         if (id === user.uid) return true;
-        console.log('shareList', shareList);
+
         return shareList[user.uid!]?.read || false;
       })
     );
