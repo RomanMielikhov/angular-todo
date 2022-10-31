@@ -6,13 +6,12 @@ export const environment = {
   firebase: {
     // databaseURL:
     // 'https://angular-todo-4bce0-default-rtdb.europe-west1.firebasedatabase.app',
-
-    apiKey: 'AIzaSyCs2KIuSpEDluBqlFtTDOhbhhjASLm2BlI',
-    authDomain: 'angular-todo-4bce0.firebaseapp.com',
-    projectId: 'angular-todo-4bce0',
-    storageBucket: 'angular-todo-4bce0.appspot.com',
-    messagingSenderId: '579744213330',
-    appId: '1:579744213330:web:157f68554b2bcbfda7b28b',
+    apiKey: 'AIzaSyDY7pGghHaBQx1dstn6gq0guviSqotv1eY',
+    authDomain: 'angular-todo-6fafd.firebaseapp.com',
+    projectId: 'angular-todo-6fafd',
+    storageBucket: 'angular-todo-6fafd.appspot.com',
+    messagingSenderId: '494601566313',
+    appId: '1:494601566313:web:bf376cb6c8ddd8aaca0af8',
   },
 
   production: false,
