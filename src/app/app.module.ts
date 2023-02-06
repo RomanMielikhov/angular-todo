@@ -9,7 +9,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { environment } from '../environments/environment';
+import { ApiInterceptor } from './interceptors/api/api.interceptor';
 import { FieldModule } from './shared/components/field/field.module';
 import { ButtonModule } from './shared/components/button/button.module';
 import { LayoutModule } from './shared/components/layout/layout.module';
@@ -32,6 +32,13 @@ import { ToolbarModule } from './shared/components/toolbar/toolbar.module';
     BrowserAnimationsModule,
   ],
   exports: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ApiInterceptor,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

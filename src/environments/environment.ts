@@ -4,6 +4,7 @@
 
 export const environment = {
   production: false,
+  dbURL: 'http://localhost:3000/api',
 };
 
 /*
