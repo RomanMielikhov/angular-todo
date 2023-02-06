@@ -11,11 +11,11 @@ import { TodoService } from 'src/app/shared/services/todo/todo.service';
 })
 export class ListsComponent {
   constructor(public todoService: TodoService, private route: ActivatedRoute) {
-    this.route.params.subscribe(() => {
-      this.todoService
-        .getLists(this.userId)
-        .subscribe((data) => (this.lists = data));
-    });
+    // this.route.params.subscribe(() => {
+    //   this.todoService
+    //     .getLists(this.userId)
+    //     .subscribe((data) => (this.lists = data));
+    // });
   }
 
   lists: IToDoList[] = [];
@@ -25,14 +25,14 @@ export class ListsComponent {
   }
 
   public onAddList(): void {
-    this.todoService
-      .addList(this.userId, this.lists.length)
-      .subscribe((item) => this.lists.push(item));
+    // this.todoService
+    //   .addList(this.userId, this.lists.length)
+    //   .subscribe((item) => this.lists.push(item));
   }
 
   public onRemoveList(listId: string): void {
-    this.todoService.removeList(listId, this.userId).subscribe((deletedId) => {
-      this.lists = this.lists.filter(({ id }) => deletedId !== id);
-    });
+    // this.todoService.removeList(listId, this.userId).subscribe((deletedId) => {
+    //   this.lists = this.lists.filter(({ id }) => deletedId !== id);
+    // });
   }
 }

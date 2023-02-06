@@ -50,10 +50,10 @@ export class AsideComponent {
   }
 
   onLogout() {
-    this.authService.logout().subscribe(() => {
-      this.toggleAside();
-      this.router.navigate([authPath.auth, authPath.login]);
-    });
+    // this.authService.logout().subscribe(() => {
+    //   this.toggleAside();
+    //   this.router.navigate([authPath.auth, authPath.login]);
+    // });
   }
 
   onToDo() {

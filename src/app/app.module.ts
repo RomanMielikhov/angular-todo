@@ -1,11 +1,8 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { provideAuth, getAuth } from '@angular/fire/auth';
 import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -33,9 +30,6 @@ import { ToolbarModule } from './shared/components/toolbar/toolbar.module';
     MatSnackBarModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideFirestore(() => getFirestore()),
-    provideAuth(() => getAuth()),
   ],
   exports: [],
   bootstrap: [AppComponent],

@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { dashboardPath } from 'src/app/constants/routes';
-import { FirebaseError } from '@angular/fire/app';
 
 import { SnackbarService } from 'src/app/shared/services/snackbar/snackbar.service';
 import { MessageService } from 'src/app/shared/services/message/message.service';
@@ -34,23 +33,23 @@ export class LoginComponent {
 
   async onSubmit() {
     this.isSubmitting = true;
-    this.authService.login(this.loginForm.value).subscribe(
-      (data) => {
-        this.isSubmitting = false;
-        this.router.navigate([
-          dashboardPath.dashboard,
-          data.user.uid,
-          dashboardPath.todo,
-        ]);
-      },
-      (error) => {
-        this.isSubmitting = false;
-        if (error instanceof FirebaseError) {
-          this.snackbarService.warn(
-            this.messageService.getMessageByFirebaseCode(error.code)
-          );
-        }
-      }
-    );
+    // this.authService.login(this.loginForm.value).subscribe(
+    //   (data) => {
+    //     this.isSubmitting = false;
+    //     this.router.navigate([
+    //       dashboardPath.dashboard,
+    //       data.user.uid,
+    //       dashboardPath.todo,
+    //     ]);
+    //   },
+    //   (error) => {
+    //     this.isSubmitting = false;
+    //     if (error instanceof FirebaseError) {
+    //       this.snackbarService.warn(
+    //         this.messageService.getMessageByFirebaseCode(error.code)
+    //       );
+    //     }
+    //   }
+    // );
   }
 }

@@ -41,15 +41,14 @@ export class ListComponent implements OnInit {
   }
 
   private getItems(): void {
-    this.todoService
-      .getListItems(this.userId, this.data.id!)
-      .subscribe((items) => {
-        const orders = this.data.orderOfItems;
+    this.todoService.getListItems(this.userId, this.data.id!);
+    // .subscribe((items) => {
+    //   const orders = this.data.orderOfItems;
 
-        this.items = items.sort(
-          (a, b) => orders.indexOf(a.id!) - orders.indexOf(b.id!)
-        );
-      });
+    //   this.items = items.sort(
+    //     (a, b) => orders.indexOf(a.id!) - orders.indexOf(b.id!)
+    //   );
+    // });
   }
 
   public onEditStart(): void {
@@ -58,32 +57,33 @@ export class ListComponent implements OnInit {
 
   public rename(event: Event): void {
     this.editing = false;
-    this.todoService
-      .updateList(this.data.id!, this.userId, {
-        ...this.data,
-        title: this.form.value.header,
-      })
-      .subscribe(
-        (item: IToDoItem) =>
-          (this.items = this.items.map((el) => (el.id === item.id ? item : el)))
-      );
+    this.todoService.updateList(this.data.id!, this.userId, {
+      ...this.data,
+      title: this.form.value.header,
+    });
+    // .subscribe(
+    //   (item: IToDoItem) =>
+    //     (this.items = this.items.map((el) => (el.id === item.id ? item : el)))
+    // );
   }
 
   public delete(id: string): void {
-    this.todoService
-      .deleteListItem(this.data.id!, this.userId, id)
-      .subscribe(
-        (itemId) => (this.items = this.items.filter((el) => el.id !== itemId))
-      );
+    this.todoService.deleteListItem(this.data.id!, this.userId, id);
+    // .subscribe(
+    //   (itemId) => (this.items = this.items.filter((el) => el.id !== itemId))
+    // );
   }
 
   public add(event: Event): void {
-    this.todoService
-      .addListItem(this.data.id!, this.userId, this.form.value.todoTitle)
-      .subscribe((item: IToDoItem) => {
-        this.items.push(item);
-        this.form.patchValue({ todoTitle: '' });
-      });
+    this.todoService.addListItem(
+      this.data.id!,
+      this.userId,
+      this.form.value.todoTitle
+    );
+    // .subscribe((item: IToDoItem) => {
+    //   this.items.push(item);
+    //   this.form.patchValue({ todoTitle: '' });
+    // });
   }
 
   public drop(event: CdkDragDrop<IToDoItem[]>): void {
@@ -106,19 +106,18 @@ export class ListComponent implements OnInit {
         event.currentIndex
       );
 
-      this.todoService
-        .moveItem(
-          event.previousContainer.id,
-          event.container.id,
-          this.userId,
-          event.item.data,
-          event.container.data.map((e) => e.id!)
-        )
-        .subscribe((id) => {
-          this.items = this.items.map((el) =>
-            el.id === event.item.data.id ? { ...el, id } : el
-          );
-        });
+      this.todoService.moveItem(
+        event.previousContainer.id,
+        event.container.id,
+        this.userId,
+        event.item.data,
+        event.container.data.map((e) => e.id!)
+      );
+      // .subscribe((id) => {
+      //   this.items = this.items.map((el) =>
+      //     el.id === event.item.data.id ? { ...el, id } : el
+      //   );
+      // });
     }
   }
 }

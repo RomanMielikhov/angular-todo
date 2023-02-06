@@ -1,5 +1,4 @@
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { FirebaseError } from '@angular/fire/app';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { from } from 'rxjs';
@@ -35,23 +34,23 @@ export class RegistrationsComponent {
   async onSubmit() {
     this.isSubmitting = true;
 
-    from(this.authService.register(this.registrationsForm.value)).subscribe(
-      (data) => {
-        this.isSubmitting = false;
+    // from(this.authService.register(this.registrationsForm.value)).subscribe(
+    //   (data) => {
+    //     this.isSubmitting = false;
 
-        this.router.navigate([
-          dashboardPath.dashboard,
-          data.user.uid,
-          dashboardPath.todo,
-        ]);
-      },
-      (error) => {
-        if (error instanceof FirebaseError) {
-          this.snackbarService.warn(
-            this.messageService.getMessageByFirebaseCode(error.code)
-          );
-        }
-      }
-    );
+    //     this.router.navigate([
+    //       dashboardPath.dashboard,
+    //       data.user.uid,
+    //       dashboardPath.todo,
+    //     ]);
+    //   },
+    //   (error) => {
+    //     if (error instanceof FirebaseError) {
+    //       this.snackbarService.warn(
+    //         this.messageService.getMessageByFirebaseCode(error.code)
+    //       );
+    //     }
+    //   }
+    // );
   }
 }

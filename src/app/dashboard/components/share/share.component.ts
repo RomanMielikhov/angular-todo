@@ -41,8 +41,8 @@ export class ShareComponent implements OnInit {
   ) {
     this.users$ = this.shareForm.get('user')!.valueChanges.pipe(
       distinctUntilChanged(),
-      debounceTime(1000),
-      switchMap((name) => this.userService.getByName(name))
+      debounceTime(1000)
+      // switchMap((name) => this.userService.getByName(name))
     );
   }
 
@@ -59,24 +59,24 @@ export class ShareComponent implements OnInit {
   }
 
   private getShareList(): void {
-    this.shareService
-      .getShareList(this.userId)
-      .subscribe((v) => (this.dataSource = Object.values(v)));
+    // this.shareService
+    //   .getShareList(this.userId)
+    //   .subscribe((v) => (this.dataSource = Object.values(v)));
   }
 
   public onSubmit(): void {
-    const { user, ...res } = this.shareForm.value;
-    this.shareService
-      .addShareUser(this.userId, {
-        ...res,
-        user: { name: user.name, email: user.email, uid: user.uid },
-      })
-      .subscribe(() => this.getShareList());
+    // const { user, ...res } = this.shareForm.value;
+    // this.shareService
+    //   .addShareUser(this.userId, {
+    //     ...res,
+    //     user: { name: user.name, email: user.email, uid: user.uid },
+    //   })
+    //   .subscribe(() => this.getShareList());
   }
 
   public remove(item: IShare): void {
-    this.shareService
-      .deleteShareUser(this.userId, item)
-      .subscribe(() => this.getShareList());
+    // this.shareService
+    //   .deleteShareUser(this.userId, item)
+    //   .subscribe(() => this.getShareList());
   }
 }
