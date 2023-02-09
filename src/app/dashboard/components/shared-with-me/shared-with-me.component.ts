@@ -15,8 +15,8 @@ export class SharedWithMeComponent implements OnInit {
   displayedColumns: string[] = ['name', 'email', 'read', 'write'];
 
   ngOnInit(): void {
-    this.userService.user.subscribe((user) => {
-      this.dataSource = Object.values(user?.sharedWithMe || {});
-    });
+    // this.userService.user.subscribe((user) => {
+    //   this.dataSource = Object.values(user?.sharedWithMe || {});
+    // });
   }
 }

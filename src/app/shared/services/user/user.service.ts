@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { from, map, Observable, of, tap } from 'rxjs';
+import { HostListener, Injectable } from '@angular/core';
+import { from, map, Observable, BehaviorSubject, Subject, of, tap } from 'rxjs';
 import { IMainUserInfo, IUser } from '../../interfaces/user.interface';
 import { IShare } from '../../interfaces/share.interface';
 
@@ -7,16 +7,9 @@ import { IShare } from '../../interfaces/share.interface';
   providedIn: 'root',
 })
 export class UserService {
+  // user = new BehaviorSubject<IMainUserInfo | null>(null);
+
   constructor() {}
-
-  public user: Observable<IUser | null> = new Observable();
-
-  private getSearchParameters(string: string): string[] {
-    return string.split('').reduce<string[]>((acc, e) => {
-      const next = `${acc.at(-1) || ''}${e}`;
-      return acc.concat(next.toLowerCase());
-    }, []);
-  }
 
   public getByName(name: any) {}
 

@@ -6,17 +6,21 @@ import {
   RouterStateSnapshot,
   UrlTree,
 } from '@angular/router';
-import { map, Observable, tap, zip } from 'rxjs';
-import { ShareService } from '../../services/share/share.service';
-import { UserService } from '../../services/user/user.service';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AccessGuard {
-  constructor(
-    public router: Router,
-    private userService: UserService,
-    private shareService: ShareService
-  ) {}
+export class AccessGuard implements CanActivate {
+  constructor(public router: Router) {}
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ):
+    | boolean
+    | UrlTree
+    | Observable<boolean | UrlTree>
+    | Promise<boolean | UrlTree> {
+    return true;
+  }
 }

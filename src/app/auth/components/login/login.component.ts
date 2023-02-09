@@ -1,11 +1,8 @@
-import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { dashboardPath } from 'src/app/constants/routes';
-
-import { SnackbarService } from 'src/app/shared/services/snackbar/snackbar.service';
-import { MessageService } from 'src/app/shared/services/message/message.service';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
 @Component({
   selector: 'app-login',
@@ -14,8 +11,6 @@ import { AuthService } from 'src/app/shared/services/auth/auth.service';
 })
 export class LoginComponent {
   constructor(
-    private snackbarService: SnackbarService,
-    private messageService: MessageService,
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private router: Router
@@ -33,23 +28,17 @@ export class LoginComponent {
 
   async onSubmit() {
     this.isSubmitting = true;
-    // this.authService.login(this.loginForm.value).subscribe(
-    //   (data) => {
-    //     this.isSubmitting = false;
-    //     this.router.navigate([
-    //       dashboardPath.dashboard,
-    //       data.user.uid,
-    //       dashboardPath.todo,
-    //     ]);
-    //   },
-    //   (error) => {
-    //     this.isSubmitting = false;
-    //     if (error instanceof FirebaseError) {
-    //       this.snackbarService.warn(
-    //         this.messageService.getMessageByFirebaseCode(error.code)
-    //       );
-    //     }
-    //   }
-    // );
+    this.authService.login(this.loginForm.value).subscribe({
+      next: (user) => {
+        this.isSubmitting = false;
+
+        this.router.navigate([
+          dashboardPath.dashboard,
+          user.id,
+          dashboardPath.todo,
+        ]);
+      },
+      error: () => (this.isSubmitting = false),
+    });
   }
 }

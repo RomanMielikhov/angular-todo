@@ -39,42 +39,40 @@ export class AsideComponent {
   }
 
   onShare() {
-    this.userService.user.subscribe((user) => {
-      this.toggleAside();
-      this.router.navigate([
-        dashboardPath.dashboard,
-        user!.uid,
-        dashboardPath.share,
-      ]);
-    });
-  }
-
-  onLogout() {
-    // this.authService.logout().subscribe(() => {
+    // this.userService.user.subscribe((user) => {
     //   this.toggleAside();
-    //   this.router.navigate([authPath.auth, authPath.login]);
+    //   this.router.navigate([
+    //     dashboardPath.dashboard,
+    //     user!.uid,
+    //     dashboardPath.share,
+    //   ]);
     // });
   }
 
+  onLogout() {
+    this.isOpened = false;
+    this.authService.logout();
+  }
+
   onToDo() {
-    this.userService.user.subscribe((user) => {
-      this.toggleAside();
-      this.router.navigate([
-        dashboardPath.dashboard,
-        user!.uid,
-        dashboardPath.todo,
-      ]);
-    });
+    // this.userService.user.subscribe((user) => {
+    //   this.toggleAside();
+    //   this.router.navigate([
+    //     dashboardPath.dashboard,
+    //     user!.uid,
+    //     dashboardPath.todo,
+    //   ]);
+    // });
   }
 
   onSharedWithMe() {
-    this.userService.user.subscribe((user) => {
-      this.toggleAside();
-      this.router.navigate([
-        dashboardPath.dashboard,
-        user!.uid,
-        dashboardPath.sharedWithMe,
-      ]);
-    });
+    // this.userService.user.subscribe((user) => {
+    //   this.toggleAside();
+    //   this.router.navigate([
+    //     dashboardPath.dashboard,
+    //     user!.uid,
+    //     dashboardPath.sharedWithMe,
+    //   ]);
+    // });
   }
 }

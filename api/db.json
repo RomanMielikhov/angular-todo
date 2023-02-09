@@ -1,0 +1,100 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "FC Barcelona",
+      "coach": "Ernesto Valverde",
+      "description": "The best football team in the world!"
+    },
+    {
+      "id": 2,
+      "name": "Real Madrid",
+      "coach": "Zinedine Zidane",
+      "description": "The worst football team in the world!"
+    },
+    {
+      "name": "roman.mielikhov@avenga.com",
+      "email": "roman.mielikhov@avenga.com",
+      "password": "roman.mielikhov@avenga.com",
+      "id": 3
+    },
+    {
+      "name": "roman.mielikhov@avenga.com",
+      "email": "roman.mielikhov@avenga.com",
+      "password": "roman.mielikhov@avenga.com",
+      "id": 4
+    },
+    {
+      "name": "roman.mielikhov@avenga.com",
+      "email": "roman.mielikhov@avenga.com",
+      "password": "roman.mielikhov@avenga.com",
+      "id": 5
+    },
+    {
+      "name": "roman.mielikhov@avenga.com",
+      "email": "roman.mielikhov@avenga.com",
+      "password": "roman.mielikhov@avenga.com",
+      "id": 6
+    },
+    {
+      "name": "roman.mielikhov@avenga.com",
+      "email": "roman.mielikhov@avenga.com",
+      "password": "roman.mielikhov@avenga.com",
+      "id": 7
+    },
+    {
+      "name": "roman.mielikhov@avenga.com",
+      "email": "roman.mielikhov@avenga.com",
+      "password": "roman.mielikhov@avenga.com",
+      "id": 8
+    },
+    {
+      "name": "roman.mielikhov@avenga.com",
+      "email": "roman.mielikhov@avenga.com",
+      "password": "roman.mielikhov@avenga.com",
+      "id": 9
+    },
+    {
+      "name": "roman.mielikhov@avenga.com",
+      "email": "roman.mielikhov@avenga.com",
+      "password": "roman.mielikhov@avenga.com",
+      "id": 10
+    },
+    {
+      "name": "roman.mielikhov@avenga.com",
+      "email": "roman.mielikhov@avenga.com",
+      "password": "roman.mielikhov@avenga.com",
+      "id": 11
+    },
+    {
+      "name": "roman.mielikhov@avenga.com",
+      "email": "roman.mielikhov@avenga.com",
+      "password": "roman.mielikhov@avenga.com",
+      "id": 12
+    },
+    {
+      "name": "roman.mielikhov@avenga.com",
+      "email": "roman.mielikhov@avenga.com",
+      "password": "123123",
+      "id": 13
+    },
+    {
+      "name": "roman.mielikhov@avenga.com",
+      "email": "roman.mielikhov@avenga.com",
+      "password": "roman.mielikhov@avenga.com",
+      "id": 14
+    },
+    {
+      "name": "roman.mielikhov@avenga.com",
+      "email": "rom123123an.mielikhov@avenga.com",
+      "password": "roman.mielikhov@avenga.com",
+      "id": 15
+    },
+    {
+      "name": "sdf",
+      "email": "sdfsdf@gmail.com",
+      "password": "12332131",
+      "id": 16
+    }
+  ]
+}

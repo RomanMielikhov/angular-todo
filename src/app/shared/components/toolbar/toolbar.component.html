@@ -1,9 +1,7 @@
 <mat-toolbar color="primary">
   <span>Todo List</span>
   <span class="spacer"></span>
-  <span *ngIf="this.userService.user | async">
-    <button mat-button (click)="onClick()">
-      Hi, {{ (this.userService.user | async)?.name }}
-    </button>
+  <span *ngIf="this.user">
+    <button mat-button (click)="onClick()">Hi, {{ this.user.name }}</button>
   </span>
 </mat-toolbar>

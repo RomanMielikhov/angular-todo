@@ -1,7 +1,8 @@
 export interface IMainUserInfo {
-  uid?: string;
+  id?: string;
   email: string;
   name: string;
+  password: string;
 }
 
 export interface IUser extends IMainUserInfo {

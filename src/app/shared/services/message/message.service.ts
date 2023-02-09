@@ -19,14 +19,6 @@ const messages: ObjectLiteral = {
   emailRegistered: 'The email is already registered',
 };
 
-const firebaseMessages: ObjectLiteral = {
-  'auth/network-request-failed': 'Network Error',
-  'auth/network-request-fasiled': 'Something was wrong',
-  'auth/email-already-in-use': 'Email already existing',
-  'auth/user-not-found': 'User not found',
-  'auth/wrong-password': 'Wrong password',
-};
-
 const statusMessages: ObjectStatusLiteral = {
   200: 'The operations was successfully',
 };
@@ -39,10 +31,6 @@ export class MessageService {
 
   getFieldError(key: string): string {
     return messages[key] || key;
-  }
-
-  getMessageByFirebaseCode(code: string): string {
-    return firebaseMessages[code] || code;
   }
 
   getMessageByStatusCode(code: number): string {
