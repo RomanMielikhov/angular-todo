@@ -7,9 +7,10 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription, Subject, takeUntil } from 'rxjs';
+
 import { authPath } from 'src/app/constants/routes';
-import { IMainUserInfo } from '../../interfaces/user.interface';
-import { AuthService } from '../../services/auth/auth.service';
+import { IMainUserInfo } from 'src/app/shared/interfaces/user.interface';
+import { UserService } from 'src/app/shared/services/user/user.service';
 
 @Component({
   selector: 'app-toolbar',
@@ -21,10 +22,10 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   subscription$ = new Subscription();
   destroy$ = new Subject();
 
-  constructor(public authService: AuthService, private router: Router) {}
+  constructor(public userService: UserService, private router: Router) {}
 
   ngOnInit() {
-    this.subscription$ = this.authService
+    this.subscription$ = this.userService
       .getUser()
       .pipe(takeUntil(this.destroy$))
       .subscribe((user) => {
@@ -33,14 +34,14 @@ export class ToolbarComponent implements OnInit, OnDestroy {
       });
   }
 
+  @Output() onUserClick = new EventEmitter<any>();
+
+  public onClick() {
+    this.onUserClick.emit();
+  }
+
   ngOnDestroy() {
     this.destroy$.next(null);
     this.destroy$.complete();
-  }
-
-  @Output() onUserClick = new EventEmitter<any>();
-
-  onClick() {
-    this.onUserClick.emit();
   }
 }

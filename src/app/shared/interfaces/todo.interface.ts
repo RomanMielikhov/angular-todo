@@ -1,15 +1,16 @@
-export interface IToDoItem {
-  id?: string;
-  title: string;
-  createdAt: number;
-  updatedAt: number;
+export interface IUserToDoListItem {
+  id: string;
+  text: string;
 }
 
-export interface IToDoList {
-  id?: string;
-  title: string;
-  position: number;
-  orderOfItems: string[];
-  createdAt: number;
-  updatedAt: number;
+export interface IUserToDoList {
+  id: string;
+  header: string;
+  items: IUserToDoListItem[];
+}
+
+export interface IUserToDo {
+  id?: number;
+  userId: number;
+  list: IUserToDoList[];
 }

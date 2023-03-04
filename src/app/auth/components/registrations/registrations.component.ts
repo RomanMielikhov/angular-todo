@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 
 import { HttpClient } from '@angular/common/http';
 import { dashboardPath } from 'src/app/constants/routes';
-import { AuthService } from 'src/app/shared/services/auth/auth.service';
+import { UserService } from 'src/app/shared/services/user/user.service';
 
 @Component({
   selector: 'app-registrations',
@@ -14,7 +14,7 @@ import { AuthService } from 'src/app/shared/services/auth/auth.service';
 export class RegistrationsComponent {
   constructor(
     private formBuilder: FormBuilder,
-    private authService: AuthService,
+    private userService: UserService,
     private router: Router,
 
     private readonly http: HttpClient
@@ -31,7 +31,7 @@ export class RegistrationsComponent {
   async onSubmit() {
     this.isSubmitting = true;
 
-    this.authService.register(this.registrationsForm.value).subscribe({
+    this.userService.register(this.registrationsForm.value).subscribe({
       next: (user) => {
         this.isSubmitting = false;
 

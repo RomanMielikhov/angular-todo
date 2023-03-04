@@ -1,4 +1,4 @@
-<form [formGroup]="form">
+<form [formGroup]="form" class="form">
   <mat-card-title class="header" *ngIf="!editing" (dblclick)="onEditStart()"
     >{{ form.value.header }}
   </mat-card-title>
@@ -13,16 +13,16 @@
   <div
     cdkDropList
     (cdkDropListDropped)="drop($event)"
-    [id]="data.id!"
-    [cdkDropListData]="items"
+    [id]="data.id.toString()"
+    [cdkDropListData]="data"
   >
     <div class="chip-list-wrapper">
       <mat-chip-list>
         <mat-chip
-          *ngFor="let item of items"
+          *ngFor="let item of data.items | orderBy : 'asc' : 'position'"
           cdkDrag
           [cdkDragData]="item"
-          (removed)="delete(item.id!)"
+          (removed)="deleteItem(item.id!)"
         >
           <app-item [item]="item" class="items"></app-item
         ></mat-chip>
@@ -31,7 +31,7 @@
   </div>
   <app-field
     label="New todo"
-    formControlName="todoTitle"
+    formControlName="text"
     [parentForm]="form"
     (onInputTokenEnd)="add($event)"
   ></app-field>

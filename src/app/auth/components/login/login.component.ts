@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { dashboardPath } from 'src/app/constants/routes';
-import { AuthService } from 'src/app/shared/services/auth/auth.service';
+import { UserService } from 'src/app/shared/services/user/user.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -12,23 +12,20 @@ import { AuthService } from 'src/app/shared/services/auth/auth.service';
 export class LoginComponent {
   constructor(
     private formBuilder: FormBuilder,
-    private authService: AuthService,
+    private userService: UserService,
     private router: Router
   ) {}
 
   isSubmitting: boolean = false;
 
   loginForm: FormGroup = this.formBuilder.group({
-    password: ['123123', [Validators.required, Validators.minLength(6)]],
-    email: [
-      'roman.mielikhov@avenga.com',
-      [Validators.required, Validators.email],
-    ],
+    password: ['', [Validators.required, Validators.minLength(6)]],
+    email: ['', [Validators.required, Validators.email]],
   });
 
   async onSubmit() {
     this.isSubmitting = true;
-    this.authService.login(this.loginForm.value).subscribe({
+    this.userService.login(this.loginForm.value).subscribe({
       next: (user) => {
         this.isSubmitting = false;
 

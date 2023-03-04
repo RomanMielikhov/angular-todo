@@ -1,78 +1,73 @@
-import { ActivationEnd, Router, Params } from '@angular/router';
-import { Component } from '@angular/core';
-import { filter, map } from 'rxjs';
+import { Router } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription, Subject, takeUntil } from 'rxjs';
 
-import { dashboardPath, authPath } from 'src/app/constants/routes';
-import { AuthService } from 'src/app/shared/services/auth/auth.service';
-import { UserService } from '../../services/user/user.service';
-
+import { dashboardPath } from 'src/app/constants/routes';
+import { IUser } from 'src/app/shared/interfaces/user.interface';
+import { UserService } from 'src/app/shared/services/user/user.service';
 @Component({
   selector: 'app-aside',
   templateUrl: './aside.component.html',
   styleUrls: ['./aside.component.scss'],
 })
-export class AsideComponent {
+export class AsideComponent implements OnDestroy, OnInit {
   isOpened: boolean = false;
-  routeParams: Params = {};
+
+  user: IUser | null = null;
+
+  subscription$ = new Subscription();
+  destroy$ = new Subject();
 
   constructor(
-    private router: Router,
-    private authService: AuthService,
-    private userService: UserService
-  ) {
-    this.router.events
-      .pipe(
-        filter(
-          (e) =>
-            e instanceof ActivationEnd &&
-            Object.keys(e.snapshot.params).length > 0
-        ),
-        map((e) => (e instanceof ActivationEnd ? e.snapshot.params : {}))
-      )
-      .subscribe((params) => {
-        this.routeParams = params;
-      });
+    private readonly router: Router,
+    private readonly userService: UserService
+  ) {}
+
+  ngOnInit(): void {
+    this.subscription$ = this.userService
+      .getUser()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((user) => (this.user = user));
   }
 
-  toggleAside() {
+  public toggleAside(): void {
     this.isOpened = !this.isOpened;
   }
 
-  onShare() {
-    // this.userService.user.subscribe((user) => {
-    //   this.toggleAside();
-    //   this.router.navigate([
-    //     dashboardPath.dashboard,
-    //     user!.uid,
-    //     dashboardPath.share,
-    //   ]);
-    // });
+  public onShare(): void {
+    this.toggleAside();
+    this.router.navigate([
+      dashboardPath.dashboard,
+      this.user!.id,
+      dashboardPath.share,
+    ]);
   }
 
-  onLogout() {
+  public onLogout(): void {
     this.isOpened = false;
-    this.authService.logout();
+    this.userService.logout();
   }
 
-  onToDo() {
-    // this.userService.user.subscribe((user) => {
-    //   this.toggleAside();
-    //   this.router.navigate([
-    //     dashboardPath.dashboard,
-    //     user!.uid,
-    //     dashboardPath.todo,
-    //   ]);
-    // });
+  public onToDo(): void {
+    this.toggleAside();
+    this.router.navigate([
+      dashboardPath.dashboard,
+      this.user!.id,
+      dashboardPath.todo,
+    ]);
   }
 
-  onSharedWithMe() {
-    // this.userService.user.subscribe((user) => {
-    //   this.toggleAside();
-    //   this.router.navigate([
-    //     dashboardPath.dashboard,
-    //     user!.uid,
-    //     dashboardPath.sharedWithMe,
-    //   ]);
-    // });
+  public onSharedWithMe(): void {
+    this.toggleAside();
+    this.router.navigate([
+      dashboardPath.dashboard,
+      this.user!.id,
+      dashboardPath.sharedWithMe,
+    ]);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(null);
+    this.destroy$.complete();
   }
 }

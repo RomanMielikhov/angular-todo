@@ -1,27 +1,17 @@
 <div class="share-container">
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+  <table mat-table [dataSource]="user!.sharedWithMe" class="mat-elevation-z8">
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef>Name</th>
       <td mat-cell *matCellDef="let element">
-        <a routerLink="/dashboard/{{ element.user.uid }}/todo">
-          {{ element.user.name }}
+        <a routerLink="/dashboard/{{ element.id }}/todo">
+          {{ element.name }}
         </a>
       </td>
     </ng-container>
 
     <ng-container matColumnDef="email">
       <th mat-header-cell *matHeaderCellDef>Email</th>
-      <td mat-cell *matCellDef="let element">{{ element.user.email }}</td>
-    </ng-container>
-
-    <ng-container matColumnDef="read">
-      <th mat-header-cell *matHeaderCellDef>Reade</th>
-      <td mat-cell *matCellDef="let element">{{ element.read }}</td>
-    </ng-container>
-
-    <ng-container matColumnDef="write">
-      <th mat-header-cell *matHeaderCellDef>Write</th>
-      <td mat-cell *matCellDef="let element">{{ element.write }}</td>
+      <td mat-cell *matCellDef="let element">{{ element.email }}</td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

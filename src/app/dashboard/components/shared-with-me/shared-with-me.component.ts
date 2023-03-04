@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription, Subject, takeUntil } from 'rxjs';
 
-import { IMainUserInfo } from 'src/app/shared/interfaces/user.interface';
+import { IUser } from 'src/app/shared/interfaces/user.interface';
 import { UserService } from 'src/app/shared/services/user/user.service';
 
 @Component({
@@ -8,15 +9,25 @@ import { UserService } from 'src/app/shared/services/user/user.service';
   templateUrl: './shared-with-me.component.html',
   styleUrls: ['./shared-with-me.component.scss'],
 })
-export class SharedWithMeComponent implements OnInit {
+export class SharedWithMeComponent implements OnInit, OnDestroy {
+  user: IUser | null = null;
+
+  subscription$ = new Subscription();
+  destroy$ = new Subject();
+
   constructor(private readonly userService: UserService) {}
 
-  dataSource: { [uid: string]: IMainUserInfo }[] = [];
-  displayedColumns: string[] = ['name', 'email', 'read', 'write'];
+  displayedColumns: string[] = ['name', 'email'];
 
   ngOnInit(): void {
-    // this.userService.user.subscribe((user) => {
-    //   this.dataSource = Object.values(user?.sharedWithMe || {});
-    // });
+    this.subscription$ = this.userService
+      .getUser()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((user) => (this.user = user));
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(null);
+    this.destroy$.complete();
   }
 }

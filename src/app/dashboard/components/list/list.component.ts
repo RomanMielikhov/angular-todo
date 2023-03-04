@@ -1,12 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   CdkDragDrop,
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { IToDoList, IToDoItem } from 'src/app/shared/interfaces/todo.interface';
+import { IUserToDoList } from 'src/app/shared/interfaces/todo.interface';
 import { TodoService } from 'src/app/shared/services/todo/todo.service';
 import { ActivatedRoute } from '@angular/router';
 
@@ -17,18 +17,18 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ListComponent implements OnInit {
   constructor(
-    private route: ActivatedRoute,
-    private formBuilder: FormBuilder,
-    private todoService: TodoService
+    private readonly route: ActivatedRoute,
+    private readonly formBuilder: FormBuilder,
+    private readonly todoService: TodoService
   ) {}
 
-  @Input('listData') data!: IToDoList;
+  @Input('data') data!: IUserToDoList;
+  @Input('todoId') todoId!: number;
 
-  public items: IToDoItem[] = [];
   public editing: boolean = false;
   public form: FormGroup = this.formBuilder.group({
     header: ['', [Validators.required]],
-    todoTitle: ['', [Validators.required]],
+    text: ['', [Validators.required]],
   });
 
   get userId(): string {
@@ -36,19 +36,7 @@ export class ListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getItems();
-    this.form.patchValue({ header: this.data.title });
-  }
-
-  private getItems(): void {
-    this.todoService.getListItems(this.userId, this.data.id!);
-    // .subscribe((items) => {
-    //   const orders = this.data.orderOfItems;
-
-    //   this.items = items.sort(
-    //     (a, b) => orders.indexOf(a.id!) - orders.indexOf(b.id!)
-    //   );
-    // });
+    this.form.patchValue({ header: this.data.header });
   }
 
   public onEditStart(): void {
@@ -57,67 +45,51 @@ export class ListComponent implements OnInit {
 
   public rename(event: Event): void {
     this.editing = false;
-    this.todoService.updateList(this.data.id!, this.userId, {
-      ...this.data,
-      title: this.form.value.header,
-    });
-    // .subscribe(
-    //   (item: IToDoItem) =>
-    //     (this.items = this.items.map((el) => (el.id === item.id ? item : el)))
-    // );
+
+    this.todoService
+      .updateList(this.todoId, {
+        ...this.data,
+        header: this.form.value.header,
+      } as IUserToDoList)
+      .subscribe();
   }
 
-  public delete(id: string): void {
-    this.todoService.deleteListItem(this.data.id!, this.userId, id);
-    // .subscribe(
-    //   (itemId) => (this.items = this.items.filter((el) => el.id !== itemId))
-    // );
+  public deleteItem(id: string): void {
+    this.todoService.deleteListItem(this.todoId, this.data.id, id).subscribe();
   }
 
   public add(event: Event): void {
-    this.todoService.addListItem(
-      this.data.id!,
-      this.userId,
-      this.form.value.todoTitle
-    );
-    // .subscribe((item: IToDoItem) => {
-    //   this.items.push(item);
-    //   this.form.patchValue({ todoTitle: '' });
-    // });
+    this.todoService
+      .addListItem(this.todoId, this.data.id, this.form.value.text)
+      .subscribe();
   }
 
-  public drop(event: CdkDragDrop<IToDoItem[]>): void {
+  public drop(event: CdkDragDrop<IUserToDoList>): void {
     if (event.previousContainer === event.container) {
       moveItemInArray(
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
-      this.todoService.updatePosition(
-        event.container.id,
-        this.userId,
-        event.container.data.map((e) => e.id!)
-      );
-    } else {
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
+        event.container.data.items,
         event.previousIndex,
         event.currentIndex
       );
 
-      this.todoService.moveItem(
-        event.previousContainer.id,
-        event.container.id,
-        this.userId,
-        event.item.data,
-        event.container.data.map((e) => e.id!)
+      this.todoService
+        .moveItemInArray(this.todoId, event.container.data)
+        .subscribe();
+    } else {
+      transferArrayItem(
+        event.previousContainer.data.items,
+        event.container.data.items,
+        event.previousIndex,
+        event.currentIndex
       );
-      // .subscribe((id) => {
-      //   this.items = this.items.map((el) =>
-      //     el.id === event.item.data.id ? { ...el, id } : el
-      //   );
-      // });
+
+      this.todoService
+        .transferArrayItem(
+          this.todoId,
+          event.previousContainer.data,
+          event.container.data
+        )
+        .subscribe();
     }
   }
 }

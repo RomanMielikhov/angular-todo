@@ -1,35 +1,165 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, from, Observable, zip, switchMap } from 'rxjs';
 
-import { IToDoList, IToDoItem } from 'src/app/shared/interfaces/todo.interface';
+import { map, tap, catchError, Observable, BehaviorSubject } from 'rxjs';
+
+import { v4 as uuid } from 'uuid';
+
+import {
+  IUserToDo,
+  IUserToDoList,
+  IUserToDoListItem,
+} from 'src/app/shared/interfaces/todo.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
-  constructor() {}
+  todos = new BehaviorSubject<IUserToDo | null>(null);
 
-  public getLists(userId: string) {}
+  constructor(private http: HttpClient) {}
 
-  public getListItems(userId: string, listId: string) {}
+  public getTodos(): Observable<IUserToDo | null> {
+    return this.todos.asObservable();
+  }
 
-  public deleteListItem(listId: string, userId: string, itemId: string) {}
+  public getLists(userId: string): Observable<IUserToDo> {
+    return this.http.get<IUserToDo[]>('todos', { params: { userId } }).pipe(
+      map(([list]) => list),
+      tap((list) => this.todos.next(list)),
+      catchError((err) => {
+        console.log(err);
+        throw err;
+      })
+    );
+  }
 
-  public addList(userId: string, position: number) {}
+  public deleteListItem(
+    todoId: number,
+    listId: string,
+    itemId: string
+  ): Observable<IUserToDo> {
+    const data = this.todos.getValue();
 
-  public removeList(id: string, userId: string) {}
+    const list = data!.list.map((e) => {
+      if (e.id === listId)
+        return { ...e, items: e.items.filter((e) => e.id !== itemId) };
+      return e;
+    });
 
-  public addListItem(id: string, userId: string, title: string) {}
+    return this.http
+      .put<IUserToDo>(`todos/${todoId}`, {
+        ...data,
+        list,
+      })
+      .pipe(tap((data) => this.todos.next(data)));
+  }
 
-  public updateList(id: string, userId: string, list: IToDoList) {}
+  public addList(todoId: number): Observable<IUserToDo> {
+    const data = this.todos.getValue();
 
-  public updatePosition(listId: string, userId: string, positions: string[]) {}
+    const emptyList = {
+      id: uuid(),
+      header: 'Title',
+      items: [],
+    } as IUserToDoList;
 
-  public moveItem(
-    fromListId: string,
-    toListId: string,
-    userId: string,
-    item: IToDoItem,
-    positions: string[]
-  ) {}
+    return this.http
+      .put<IUserToDo>(`todos/${todoId}`, {
+        ...data,
+        list: [...data!.list, emptyList],
+      })
+      .pipe(tap((data) => this.todos.next(data)));
+  }
+
+  public createList(userId: number): Observable<IUserToDo> {
+    return this.http
+      .post<IUserToDo>('todos', { userId, list: [] } as IUserToDo)
+      .pipe(tap((data) => this.todos.next(data)));
+  }
+
+  public removeList(id: string, todoId: number): Observable<IUserToDo> {
+    const data = this.todos.getValue();
+
+    return this.http
+      .put<IUserToDo>(`todos/${todoId}`, {
+        ...data,
+        list: data!.list.filter((item) => item.id !== id),
+      })
+      .pipe(tap((data) => this.todos.next(data)));
+  }
+
+  public addListItem(
+    todoId: number,
+    listId: string,
+    text: string
+  ): Observable<IUserToDo> {
+    const data = this.todos.getValue();
+
+    const list = data!.list.find((e) => e.id === listId);
+
+    const item = {
+      id: uuid(),
+      text,
+    } as IUserToDoListItem;
+
+    const items = [...list!.items, item];
+
+    const todo = { ...list, items: items };
+
+    return this.http
+      .put<IUserToDo>(`todos/${todoId}`, {
+        ...data,
+        list: data!.list.map((e) => (e.id === todo.id ? todo : e)),
+      })
+      .pipe(tap((data) => this.todos.next(data)));
+  }
+
+  public updateList(
+    todoId: number,
+    list: IUserToDoList
+  ): Observable<IUserToDo> {
+    const data = this.todos.getValue();
+
+    return this.http
+      .put<IUserToDo>(`todos/${todoId}`, {
+        ...data,
+        list: data!.list.map((item) => (item.id == list.id ? list : item)),
+      })
+      .pipe(tap((data) => this.todos.next(data)));
+  }
+
+  public moveItemInArray(
+    todoId: number,
+    list: IUserToDoList
+  ): Observable<IUserToDo> {
+    const data = this.todos.getValue();
+
+    return this.http
+      .put<IUserToDo>(`todos/${todoId}`, {
+        ...data,
+        list: data!.list.map((e) => (e.id === list.id ? list : e)),
+      })
+      .pipe(tap((data) => this.todos.next(data)));
+  }
+
+  public transferArrayItem(
+    todoId: number,
+    first: IUserToDoList,
+    seconde: IUserToDoList
+  ): Observable<IUserToDo> {
+    const data = this.todos.getValue();
+
+    return this.http
+      .put<IUserToDo>(`todos/${todoId}`, {
+        ...data,
+        list: data!.list.map((e) => {
+          if (e.id === first.id) return first;
+          if (e.id === seconde.id) return seconde;
+
+          return e;
+        }),
+      })
+      .pipe(tap((data) => this.todos.next(data)));
+  }
 }

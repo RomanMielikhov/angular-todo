@@ -1,17 +1,17 @@
 <div class="dashboard" cdkDropListGroup>
-  <div *ngFor="let todo of lists | orderBy: 'asc':'position'">
-    <mat-card>
+  <div *ngIf="todos$ | async as todos">
+    <mat-card *ngFor="let list of todos.list | orderBy : 'asc' : 'position'">
       <div class="remove-card">
-        <button mat-icon-button (click)="onRemoveList(todo.id!)">
+        <button mat-icon-button (click)="onRemoveList(list.id!, todos.id!)">
           <mat-icon>remove</mat-icon>
         </button>
       </div>
-      <app-list [listData]="todo"></app-list>
+
+      <app-list [data]="list" [todoId]="todos.id!"></app-list>
     </mat-card>
-  </div>
-  <div>
+
     <mat-card>
-      <app-fav-button (click)="onAddList()">add</app-fav-button>
+      <app-fav-button (click)="onAddList(todos.id!)">add</app-fav-button>
     </mat-card>
   </div>
 </div>

@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 
-import { IToDoList } from 'src/app/shared/interfaces/todo.interface';
+import { IUserToDo } from 'src/app/shared/interfaces/todo.interface';
 import { TodoService } from 'src/app/shared/services/todo/todo.service';
 
 @Component({
@@ -9,30 +10,37 @@ import { TodoService } from 'src/app/shared/services/todo/todo.service';
   templateUrl: './lists.component.html',
   styleUrls: ['./lists.component.scss'],
 })
-export class ListsComponent {
-  constructor(public todoService: TodoService, private route: ActivatedRoute) {
-    // this.route.params.subscribe(() => {
-    //   this.todoService
-    //     .getLists(this.userId)
-    //     .subscribe((data) => (this.lists = data));
-    // });
-  }
+export class ListsComponent implements OnInit, OnDestroy {
+  todos$: Observable<IUserToDo | null> = new Observable();
+  destroy$ = new Subject();
 
-  lists: IToDoList[] = [];
+  constructor(
+    private readonly todoService: TodoService,
+    private readonly route: ActivatedRoute
+  ) {
+    this.route.params.subscribe(() => {
+      this.todoService.getLists(this.userId).subscribe();
+    });
+  }
 
   get userId(): string {
     return this.route.snapshot.params['id'];
   }
 
-  public onAddList(): void {
-    // this.todoService
-    //   .addList(this.userId, this.lists.length)
-    //   .subscribe((item) => this.lists.push(item));
+  ngOnInit(): void {
+    this.todos$ = this.todoService.getTodos().pipe(takeUntil(this.destroy$));
   }
 
-  public onRemoveList(listId: string): void {
-    // this.todoService.removeList(listId, this.userId).subscribe((deletedId) => {
-    //   this.lists = this.lists.filter(({ id }) => deletedId !== id);
-    // });
+  public onAddList(todoId: number): void {
+    this.todoService.addList(todoId).subscribe();
+  }
+
+  public onRemoveList(listId: string, todoId: number): void {
+    this.todoService.removeList(listId, todoId).subscribe();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(null);
+    this.destroy$.complete();
   }
 }

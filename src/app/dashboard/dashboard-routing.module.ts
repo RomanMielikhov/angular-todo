@@ -18,10 +18,12 @@ const routes: Routes = [
   {
     path: `:id/${dashboardPath.share}`,
     component: ShareComponent,
+    canActivate: [AccessGuard],
   },
   {
     path: `:id/${dashboardPath.sharedWithMe}`,
     component: SharedWithMeComponent,
+    canActivate: [AccessGuard],
   },
 ];
 
