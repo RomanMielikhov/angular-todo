@@ -16,13 +16,21 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "es2020",
+    "target": "ES2022",
     "module": "es2020",
     "paths": {
-      "@shared/*": ["src/app/shared/"],
-      "@sharedComponents/*": ["src/app/shared/components"]
+      "@shared/*": [
+        "src/app/shared/"
+      ],
+      "@sharedComponents/*": [
+        "src/app/shared/components"
+      ]
     },
-    "lib": ["es2022", "dom"]
+    "lib": [
+      "es2022",
+      "dom"
+    ],
+    "useDefineForClassFields": false
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
