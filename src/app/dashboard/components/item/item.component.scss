@@ -1,6 +1,44 @@
+:root {
+  --width: 100;
+}
+
 .item {
-  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  &__right {
+    display: flex;
+    align-items: center;
+    // background: linear-gradient(45deg, blue, red);
+    // image()
+    // url()
+    // image-set()
+
+    & img {
+      transform: rotateZ(30deg);
+
+      // filter: blur(4px);
+      // filter: opacity(20%);
+      // filter: invert(20%);
+      // filter: contrast(50%);
+      // transform: translate(10px, 18px);
+      // transform: scale(0.9);
+      // transform: skew(35deg);
+      // transform: perspective(9cm);
+      // linear-gradient()
+      // attr()
+    }
+  }
+
+  &__left {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+    & span {
+      font-size: clamp(1rem, -0.875rem + 8.333vw, 2rem);
+      // font-size: round(12.5px);
+    }
+  }
 }

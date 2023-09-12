@@ -21,17 +21,19 @@ import { ItemComponent } from './components/item/item.component';
 import { ListComponent } from './components/list/list.component';
 import { ShareComponent } from './components/share/share.component';
 import { ListsComponent } from './components/lists/lists.component';
-import { SharedWithMeComponent } from './components/shared-with-me/shared-with-me.component';
 import { OrderByPipe } from '../shared/pipes/orderBy/order-by.pipe';
+import { DateFormatPipe } from '../shared/pipes/dateFormat/dateFormat.pipe';
+import { SharedWithMeComponent } from './components/shared-with-me/shared-with-me.component';
 
 @NgModule({
-  providers: [OrderByPipe],
+  providers: [OrderByPipe, DateFormatPipe],
   declarations: [
     OrderByPipe,
     ListComponent,
     ItemComponent,
     ListsComponent,
     ShareComponent,
+    DateFormatPipe,
     SharedWithMeComponent,
   ],
   imports: [

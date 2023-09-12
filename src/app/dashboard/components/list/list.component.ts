@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   CdkDragDrop,
@@ -25,7 +25,16 @@ export class ListComponent implements OnInit {
   @Input('data') data!: IUserToDoList;
   @Input('todoId') todoId!: number;
 
+  @ViewChild('video', { static: true, read: ElementRef })
+  video!: ElementRef<HTMLVideoElement>;
+
+  @ViewChild('canvas', { static: true, read: ElementRef })
+  canvas!: ElementRef<HTMLCanvasElement>;
+
+  public size: number = 0;
   public editing: boolean = false;
+  private img: string | null = null;
+
   public form: FormGroup = this.formBuilder.group({
     header: ['', [Validators.required]],
     text: ['', [Validators.required]],
@@ -60,7 +69,12 @@ export class ListComponent implements OnInit {
 
   public add(event: Event): void {
     this.todoService
-      .addListItem(this.todoId, this.data.id, this.form.value.text)
+      .addListItem(
+        this.todoId,
+        this.data.id,
+        this.form.value.text,
+        this.img ? this.img : null
+      )
       .subscribe();
   }
 
@@ -91,5 +105,37 @@ export class ListComponent implements OnInit {
         )
         .subscribe();
     }
+  }
+
+  public async onCam(): Promise<void> {
+    this.size = 100;
+
+    this.getVideo();
+  }
+
+  private getVideo() {
+    navigator.mediaDevices
+      .getUserMedia({ video: true, audio: false })
+      .then((localMediaStream) => {
+        const nativeElement = this.video.nativeElement;
+        nativeElement.srcObject = localMediaStream;
+        nativeElement.play();
+      })
+      .catch((err) => {
+        console.error('ERROR', err);
+      });
+  }
+
+  public handleImage(): void {
+    const video = this.video.nativeElement;
+    const canvas = this.canvas.nativeElement;
+
+    canvas.width = this.size;
+    canvas.height = this.size;
+
+    const context = canvas.getContext('2d');
+    context!.imageSmoothingEnabled = false;
+    context!.drawImage(video, 0, 0, this.size, this.size);
+    this.img = canvas.toDataURL('image/jpeg');
   }
 }

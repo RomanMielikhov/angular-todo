@@ -73,6 +73,7 @@ export class TodoService {
   }
 
   public createList(userId: number): Observable<IUserToDo> {
+    console.log('create user list');
     return this.http
       .post<IUserToDo>('todos', { userId, list: [] } as IUserToDo)
       .pipe(tap((data) => this.todos.next(data)));
@@ -92,7 +93,8 @@ export class TodoService {
   public addListItem(
     todoId: number,
     listId: string,
-    text: string
+    text: string,
+    image: string | null
   ): Observable<IUserToDo> {
     const data = this.todos.getValue();
 
@@ -100,7 +102,9 @@ export class TodoService {
 
     const item = {
       id: uuid(),
+      date: new Date().toISOString(),
       text,
+      image,
     } as IUserToDoListItem;
 
     const items = [...list!.items, item];

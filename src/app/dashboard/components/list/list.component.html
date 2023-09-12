@@ -29,10 +29,24 @@
       </mat-chip-list>
     </div>
   </div>
+
   <app-field
     label="New todo"
     formControlName="text"
     [parentForm]="form"
     (onInputTokenEnd)="add($event)"
   ></app-field>
+
+  <div class="picture-line">
+    <div class="web-camera">
+      <video #video [height]="size" [width]="size"></video>
+
+      <button type="button" (click)="onCam()">on/off camera</button>
+    </div>
+    <div class="img">
+      <canvas #canvas [height]="size" [width]="size"></canvas>
+
+      <button type="button" (click)="handleImage()">take photo</button>
+    </div>
+  </div>
 </form>

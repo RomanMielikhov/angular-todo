@@ -1,56 +1,19 @@
 {
   "users": [
     {
-      "name": "user1",
-      "email": "someEmail@avenga.com",
+      "name": "password",
+      "email": "password@gmail.com",
+      "password": "password",
       "sharedWithMe": [],
       "share": [],
-      "password": "123123",
-      "id": 13
+      "id": 14
     }
   ],
   "todos": [
     {
-      "id": 1,
-      "userId": 13,
-      "list": [
-        {
-          "id": "79ef50b5-cba6-4292-9698-dfdfb10e87a2",
-          "header": "Title",
-          "items": [
-            {
-              "id": "f2081783-1ed0-4c3b-9dd7-7f4f7b64b2ec",
-              "text": "1"
-            },
-            {
-              "id": "f6d84ed3-36ca-4cbf-8178-6655b594ff69",
-              "text": "3"
-            }
-          ]
-        },
-        {
-          "id": "a741b616-7fa2-4ba8-9f0d-151583b24c2f",
-          "header": "Title",
-          "items": [
-            {
-              "id": "dfb84242-f3aa-4eb9-8b95-178611820b00",
-              "text": "2"
-            },
-            {
-              "id": "3ec62c94-55ee-4d35-a50f-7b2803114423",
-              "text": "s"
-            },
-            {
-              "id": "3af43e05-a858-41df-bc65-8b05e199b192",
-              "text": "d"
-            },
-            {
-              "id": "877d7b6f-e0b1-405c-b310-2612fe40e20c",
-              "text": "a"
-            }
-          ]
-        }
-      ]
+      "userId": 14,
+      "list": [],
+      "id": 1
     }
   ]
 }
